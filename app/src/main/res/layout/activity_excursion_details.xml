@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#27523D"
+    tools:context=".ui.ExcursionDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Vacation Name"
+                android:textAlignment="viewStart"
+                android:textColor="#FDFCF8"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/edit_vacationName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:minWidth="300dp"
+                android:minHeight="48dp"
+                android:textColor="#FDFCF8"
+                android:padding="5dp"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Excursion Name"
+                android:textAlignment="viewStart"
+                android:textColor="#FDFCF8"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edit_excursionName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#FBF8EF"
+                android:hint="Cooking Lesson"
+                android:minWidth="300dp"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="Excursion Date"
+                android:textAlignment="viewStart"
+                android:textColor="#FDFCF8"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/edit_excursionDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#FBF8EF"
+                android:hint="▼ Select Date"
+                android:minWidth="300dp"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Note"
+            android:textAlignment="viewStart"
+            android:textColor="#FDFCF8"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_excursionNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#FBF8EF"
+            android:gravity="top"
+            android:hint="Add note here"
+            android:minWidth="300dp"
+            android:minHeight="300dp"
+            android:padding="5dp"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
