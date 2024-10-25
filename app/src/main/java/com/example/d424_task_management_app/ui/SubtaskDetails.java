@@ -1,5 +1,6 @@
 package com.example.d424_task_management_app.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -9,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,17 +90,18 @@ public class SubtaskDetails extends AppCompatActivity {
         }
 
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         editDate.setOnClickListener(view -> {
 
             String info = editDate.getText().toString();
-            if (info.equals("")) {
+            if (info.isEmpty()) {
                 info = sdf.format(Calendar.getInstance().getTime());
             }
             try {
                 myCalendar.setTime(sdf.parse(info));
             } catch (ParseException e) {
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
             }
             new DatePickerDialog(SubtaskDetails.this,
@@ -109,20 +110,17 @@ public class SubtaskDetails extends AppCompatActivity {
                     myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
-        dateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, month);
-                myCalendar.set(Calendar.DAY_OF_MONTH, day);
-                updateLabelDate();
-            }
+        dateListener = (datePicker, year, month, day) -> {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, day);
+            updateLabelDate();
         };
     }
 
     public void updateLabelDate() {
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         editDate.setText(sdf.format(myCalendar.getTime()));
     }
 
@@ -165,14 +163,12 @@ public class SubtaskDetails extends AppCompatActivity {
 
     public int checkValidDate() {
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         String subtaskDate = editDate.getText().toString();
         String startDate = getIntent().getStringExtra("taskStart");
         String endDate = getIntent().getStringExtra("taskEnd");
-        if (subtaskDate == null || subtaskDate.isEmpty() ||
-                startDate == null || startDate.isEmpty() ||
-                endDate == null || endDate.isEmpty()) {
+        if (subtaskDate.isEmpty() || startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
 
             Toast.makeText(SubtaskDetails.this, "Date fields cannot be empty", Toast.LENGTH_SHORT).show();
             return -1;
@@ -182,7 +178,7 @@ public class SubtaskDetails extends AppCompatActivity {
             Date date = sdf.parse(subtaskDate);
             Date start = sdf.parse(startDate);
             Date end = sdf.parse(endDate);
-            if (date.before(start) || date.after(end)) {
+            if (date != null && (date.before(start) || date.after(end))) {
                 Toast.makeText(SubtaskDetails.this, "Error: Subtask must be between Task start and end dates.", Toast.LENGTH_SHORT).show();
                 return -1;
             }
@@ -198,7 +194,8 @@ public class SubtaskDetails extends AppCompatActivity {
         Subtask subtask;
         repository = new Repository(getApplication());
         if (item.getItemId() == R.id.save_subtask) {
-            if (checkValidDate() == -1) {
+            if (checkValidDate() == -1) {                return true;
+
             }
             else if (editName.getText().toString().isEmpty()) {
                 Toast.makeText(SubtaskDetails.this, "Subtask name cannot be empty", Toast.LENGTH_SHORT).show();
@@ -206,7 +203,7 @@ public class SubtaskDetails extends AppCompatActivity {
             }
             // If new subtask, get next subtask ID and create new subtask from input fields
             else if (subtaskID == -1) {
-                if (repository.getmAllSubtasks().size() == 0) {
+                if (repository.getmAllSubtasks().isEmpty()) {
                     subtaskID = 1;
                 } else {
                     subtaskID = repository.getmAllSubtasks().get(repository.getmAllSubtasks().size() - 1).getSubtaskID() + 1;
@@ -230,7 +227,7 @@ public class SubtaskDetails extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.delete_subtask) {
-            if(isSubtaskSaved == false){
+            if(!isSubtaskSaved){
                 Toast.makeText(SubtaskDetails.this, "Cannot delete subtask that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -245,7 +242,7 @@ public class SubtaskDetails extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.notify_date) {
-            if(isSubtaskSaved == false){
+            if(!isSubtaskSaved){
                 Toast.makeText(SubtaskDetails.this, "Cannot notify subtask that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -257,21 +254,25 @@ public class SubtaskDetails extends AppCompatActivity {
 
             subtaskDate = editDate.getText().toString();
 
-            if (subtaskDate == null || subtaskDate.isEmpty()){
+            if (subtaskDate.isEmpty()){
                 Toast.makeText(SubtaskDetails.this, "Date fields cannot be empty", Toast.LENGTH_SHORT).show();
                 return true;
             }
 
-            Date date = null;
+            Date date;
             try {
                 date = sdf.parse(subtaskDate);
             } catch (ParseException e) {
                 Toast.makeText(SubtaskDetails.this, "Invalid date format. Please use MM/DD/YYYY", Toast.LENGTH_SHORT).show();
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
                 return true;
             }
 
-            Long triggerTime = date.getTime();
+            long triggerTime = 0;
+            if (date != null) {
+                triggerTime = date.getTime();
+            }
             Intent intent = new Intent(SubtaskDetails.this, MyReceiver.class);
             intent.putExtra("name", editName.getText().toString());
             intent.putExtra("date", editDate.getText().toString());

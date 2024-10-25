@@ -29,9 +29,7 @@ public class Repository {
     }
 
     public List<Task> getmAllTasks(){
-        databaseWriteExecutor.execute(() -> {
-            mAllTasks = mTaskDAO.getAllTasks();
-        });
+        databaseWriteExecutor.execute(() -> mAllTasks = mTaskDAO.getAllTasks());
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -46,9 +44,7 @@ public class Repository {
 
     public long insert(Task task){
         final long[] taskID = new long[1];
-        databaseWriteExecutor.execute(() -> {
-            taskID[0] = mTaskDAO.insert(task);
-        });
+        databaseWriteExecutor.execute(() -> taskID[0] = mTaskDAO.insert(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -58,9 +54,7 @@ public class Repository {
     }
 
     public void update(Task task){
-        databaseWriteExecutor.execute(() -> {
-            mTaskDAO.update(task);
-        });
+        databaseWriteExecutor.execute(() -> mTaskDAO.update(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -69,9 +63,7 @@ public class Repository {
     }
 
     public void delete(Task task){
-        databaseWriteExecutor.execute(() -> {
-            mTaskDAO.delete(task);
-        });
+        databaseWriteExecutor.execute(() -> mTaskDAO.delete(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -80,9 +72,7 @@ public class Repository {
     }
 
     public List<Subtask> getmAllSubtasks(){
-        databaseWriteExecutor.execute(() -> {
-            mAllSubtasks = mSubtaskDAO.getAllSubtasks();
-        });
+        databaseWriteExecutor.execute(() -> mAllSubtasks = mSubtaskDAO.getAllSubtasks());
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -92,9 +82,7 @@ public class Repository {
     }
 
     public List<Subtask> getAssociatedSubtasks(int taskID){
-        databaseWriteExecutor.execute(() -> {
-            mAllSubtasks = mSubtaskDAO.getAssociatedSubtasks(taskID);
-        });
+        databaseWriteExecutor.execute(() -> mAllSubtasks = mSubtaskDAO.getAssociatedSubtasks(taskID));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -104,9 +92,7 @@ public class Repository {
     }
 
     public void insert(Subtask subtask){
-        databaseWriteExecutor.execute(() -> {
-            mSubtaskDAO.insert(subtask);
-        });
+        databaseWriteExecutor.execute(() -> mSubtaskDAO.insert(subtask));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -114,9 +100,7 @@ public class Repository {
         }
     }
     public void update(Subtask subtask){
-        databaseWriteExecutor.execute(() -> {
-            mSubtaskDAO.update(subtask);
-        });
+        databaseWriteExecutor.execute(() -> mSubtaskDAO.update(subtask));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -125,9 +109,7 @@ public class Repository {
     }
 
     public void delete(Subtask subtask){
-        databaseWriteExecutor.execute(() -> {
-            mSubtaskDAO.delete(subtask);
-        });
+        databaseWriteExecutor.execute(() -> mSubtaskDAO.delete(subtask));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){

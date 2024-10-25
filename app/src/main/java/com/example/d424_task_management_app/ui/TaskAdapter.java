@@ -39,7 +39,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 Intent intent = new Intent(context, TaskDetails.class);
                 intent.putExtra("taskID", task.getTaskID());
                 intent.putExtra("taskName", task.getTaskName());
-                intent.putExtra("taskHotelName", task.getHotelName());
+                intent.putExtra("taskCategoryName", task.getCategoryName());
                 intent.putExtra("taskStartDate", task.getStartDate());
                 intent.putExtra("taskEndDate", task.getEndDate());
                 intent.putExtra("taskID", task.getTaskID());

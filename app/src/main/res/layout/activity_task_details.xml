@@ -75,19 +75,19 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:text="Hotel Name"
+                    android:text="Category Name"
                     android:textAlignment="viewStart"
                     android:textColor="#FDFCF8"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/edit_hotelName"
+                    android:id="@+id/edit_categoryName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:background="#FBF8EF"
-                    android:hint="Omni Dallas Hotel"
+                    android:hint="Omni Dallas Category"
                     android:minWidth="300dp"
                     android:minHeight="48dp"
                     android:padding="5dp"

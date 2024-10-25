@@ -13,24 +13,16 @@ public class Task {
         this.taskName = TaskName;
     }
 
-    public String getHotelName() {
-        return hotelName;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public int gettaskID() {
-        return taskID;
-    }
-
-    public void settaskID(int taskID) {
-        this.taskID = taskID;
-    }
-
-    public Task(int taskID, String taskName, String hotelName, String startDate, String endDate) {
-        this.hotelName = hotelName;
+    public Task(int taskID, String taskName, String categoryName, String startDate, String endDate) {
+        this.categoryName = categoryName;
         this.taskName = taskName;
         this.taskID = taskID;
         this.startDate = startDate;
@@ -40,11 +32,14 @@ public class Task {
     public void setTaskID(int taskID) {
         this.taskID = taskID;
     }
+    public int getTaskID() {
+        return taskID;
+    }
 
     @PrimaryKey(autoGenerate = true)
     private int taskID;
     private String taskName;
-    private String hotelName;
+    private String categoryName;
 
     public String getStartDate() {
         return startDate;
@@ -67,8 +62,5 @@ public class Task {
     private String endDate;
 
 
-    public int getTaskID() {
-        return taskID;
-    }
 
 }

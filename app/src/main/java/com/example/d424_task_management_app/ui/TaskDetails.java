@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,12 +36,12 @@ import java.util.Locale;
 
 public class TaskDetails extends AppCompatActivity {
     String taskName;
-    String hotelName;
+    String categoryName;
     String taskStart;
     String taskEnd;
     int taskID;
     EditText edit_taskName;
-    EditText edit_hotelName;
+    EditText edit_categoryName;
     TextView edit_startDate;
     TextView edit_endDate;
     Repository repository;
@@ -65,19 +64,19 @@ public class TaskDetails extends AppCompatActivity {
 
         // Get input fields
         edit_taskName = findViewById(R.id.edit_taskName);
-        edit_hotelName = findViewById(R.id.edit_hotelName);
+        edit_categoryName = findViewById(R.id.edit_categoryName);
         edit_startDate = findViewById(R.id.edit_startDate);
         edit_endDate = findViewById(R.id.edit_endDate);
         // Get clicked task details
         taskName = getIntent().getStringExtra("taskName");
-        hotelName = getIntent().getStringExtra("taskHotelName");
+        categoryName = getIntent().getStringExtra("taskCategoryName");
         taskStart = getIntent().getStringExtra("taskStartDate");
         taskEnd = getIntent().getStringExtra("taskEndDate");
         taskID = getIntent().getIntExtra("taskID", -1);
         // Check if task has been saved
         isTaskSaved = getIntent().getBooleanExtra("isTaskSaved", false);
         edit_taskName.addTextChangedListener(textWatcher);
-        edit_hotelName.addTextChangedListener(textWatcher);
+        edit_categoryName.addTextChangedListener(textWatcher);
         edit_startDate.addTextChangedListener(textWatcher);
         edit_endDate.addTextChangedListener(textWatcher);
         // Set input fields
@@ -100,77 +99,62 @@ public class TaskDetails extends AppCompatActivity {
         // Set up Recycler View to show subtasks associated with task
         RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
         repository = new Repository(getApplication());
-        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, repository, taskName, taskStart, taskEnd);
+        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, taskName, taskStart, taskEnd);
         recyclerView.setAdapter(subtaskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
         subtaskAdapter.setSubtasks(filteredSubtasks);
 
-        String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-
-        edit_startDate.setOnClickListener(view -> {
-            Date date;
-            new DatePickerDialog(TaskDetails.this,
-                    startDateListener,
-                    myCalendar.get(Calendar.YEAR),
-                    myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-        startDateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, month);
-                myCalendar.set(Calendar.DAY_OF_MONTH, day);
-                updateLabelStartDate();
-            }
+        edit_startDate.setOnClickListener(view -> new DatePickerDialog(TaskDetails.this,
+                startDateListener,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+        startDateListener = (datePicker, year, month, day) -> {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, day);
+            updateLabelStartDate();
         };
 
-        edit_endDate.setOnClickListener(view -> {
-            Date date;
-            new DatePickerDialog(TaskDetails.this,
-                    endDateListener,
-                    myCalendar.get(Calendar.YEAR),
-                    myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
-        endDateListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, month);
-                myCalendar.set(Calendar.DAY_OF_MONTH, day);
-                updateLabelEndDate();
-            }
+        edit_endDate.setOnClickListener(view -> new DatePickerDialog(TaskDetails.this,
+                endDateListener,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+        endDateListener = (datePicker, year, month, day) -> {
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, day);
+            updateLabelEndDate();
         };
     }
 
     public void updateLabelStartDate() {
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         edit_startDate.setText(sdf.format(myCalendar.getTime()));
     }
 
     public void updateLabelEndDate() {
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         edit_endDate.setText(sdf.format(myCalendar.getTime()));
     }
 
     private void setTaskDetailsWithoutTriggeringTextWatcher() {
         edit_taskName.removeTextChangedListener(textWatcher);
-        edit_hotelName.removeTextChangedListener(textWatcher);
+        edit_categoryName.removeTextChangedListener(textWatcher);
         edit_startDate.removeTextChangedListener(textWatcher);
         edit_endDate.removeTextChangedListener(textWatcher);
 
         edit_taskName.setText(taskName);
-        edit_hotelName.setText(hotelName);
+        edit_categoryName.setText(categoryName);
         edit_startDate.setText(taskStart);
         edit_endDate.setText(taskEnd);
 
         edit_taskName.addTextChangedListener(textWatcher);
-        edit_hotelName.addTextChangedListener(textWatcher);
+        edit_categoryName.addTextChangedListener(textWatcher);
         edit_startDate.addTextChangedListener(textWatcher);
         edit_endDate.addTextChangedListener(textWatcher);
     }
@@ -196,12 +180,12 @@ public class TaskDetails extends AppCompatActivity {
 
     public int checkValidDate() {
         String dateFormat = "MM/dd/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         String startDate = edit_startDate.getText().toString();
         String endDate = edit_endDate.getText().toString();
 
-        if (startDate == null || startDate.isEmpty() || endDate == null || endDate.isEmpty()) {
+        if (startDate.isEmpty() || endDate.isEmpty()) {
             Toast.makeText(TaskDetails.this, "Date fields cannot be empty", Toast.LENGTH_SHORT).show();
             return -1;
         }
@@ -209,7 +193,7 @@ public class TaskDetails extends AppCompatActivity {
         try {
             Date start = sdf.parse(startDate);
             Date end = sdf.parse(endDate);
-            if (start.after(end)) {
+            if (start != null && start.after(end)) {
                 Toast.makeText(TaskDetails.this, "Error: Start date must be before end date", Toast.LENGTH_SHORT).show();
                 return -1;
             }
@@ -232,14 +216,14 @@ public class TaskDetails extends AppCompatActivity {
             }
             // If new task, get next task ID and create new task from input fields
             else if (taskID == -1) {
-                if (repository.getmAllTasks().size() == 0) {
+                if (repository.getmAllTasks().isEmpty()) {
                     taskID = 1;
                 } else {
                     taskID = repository.getmAllTasks().get(repository.getmAllTasks().size() - 1).getTaskID() + 1;
                 }
                 task = new Task(taskID,
                         edit_taskName.getText().toString(),
-                        edit_hotelName.getText().toString(),
+                        edit_categoryName.getText().toString(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Adding Task", Toast.LENGTH_SHORT).show();
@@ -247,7 +231,7 @@ public class TaskDetails extends AppCompatActivity {
             } else {
                 task = new Task(taskID,
                         edit_taskName.getText().toString(),
-                        edit_hotelName.getText().toString(),
+                        edit_categoryName.getText().toString(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Updating Task", Toast.LENGTH_SHORT).show();
@@ -257,28 +241,27 @@ public class TaskDetails extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.delete_task) {
-            if (isTaskSaved == false) {
+            if (!isTaskSaved) {
                 Toast.makeText(TaskDetails.this, "Cannot delete task that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
             }
             List<Subtask> associatedSubtasks = repository.getAssociatedSubtasks(taskID);
             if (!associatedSubtasks.isEmpty()) {
                 Toast.makeText(TaskDetails.this, "Cannot delete task with associated subtasks", Toast.LENGTH_SHORT).show();
-                return true;
             } else {
                 task = new Task(taskID,
                         edit_taskName.getText().toString(),
-                        edit_hotelName.getText().toString(),
+                        edit_categoryName.getText().toString(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Deleting Task", Toast.LENGTH_SHORT).show();
                 repository.delete(task);
                 this.finish();
-                return true;
             }
+            return true;
         }
         if (item.getItemId() == R.id.share_details) {
-            if (isTaskSaved == false) {
+            if (!isTaskSaved) {
                 Toast.makeText(TaskDetails.this, "Cannot share task that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -287,13 +270,13 @@ public class TaskDetails extends AppCompatActivity {
             }
             Intent intent = new Intent(Intent.ACTION_SEND);
             StringBuilder builder = new StringBuilder();
-            builder.append("Task Name: " + edit_taskName.getText().toString() + "\nTask Date: " + edit_startDate.getText().toString() + " - " + edit_endDate.getText().toString() + "\n\n");
+            builder.append("Task Name: ").append(edit_taskName.getText().toString()).append("\nTask Date: ").append(edit_startDate.getText().toString()).append(" - ").append(edit_endDate.getText().toString()).append("\n\n");
             if (repository.getAssociatedSubtasks(taskID).isEmpty()) {
                 builder.append("No subtasks associated with this task");
             }
             else{
                 for (Subtask subtask : repository.getAssociatedSubtasks(taskID)) {
-                    builder.append("Subtask Name: " + subtask.getSubtaskName() + "\nSubtask Date: " + subtask.getSubtaskDate() + "\n\n");
+                    builder.append("Subtask Name: ").append(subtask.getSubtaskName()).append("\nSubtask Date: ").append(subtask.getSubtaskDate()).append("\n\n");
                 }
             }
             intent.putExtra(Intent.EXTRA_TEXT, builder.toString());
@@ -304,15 +287,15 @@ public class TaskDetails extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.notify_task) {
-            if (isTaskSaved == false) {
+            if (!isTaskSaved) {
                 Toast.makeText(TaskDetails.this, "Cannot notify task that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
             }
             String dateFormat = "MM/dd/yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
-            Date startDate = null;
-            Date endDate = null;
+            Date startDate;
+            Date endDate;
             try {
                 startDate = sdf.parse(edit_startDate.getText().toString());
                 endDate = sdf.parse(edit_endDate.getText().toString());
@@ -323,7 +306,6 @@ public class TaskDetails extends AppCompatActivity {
             }
             if (startDate == null || endDate == null) {
                 Toast.makeText(TaskDetails.this, "Invalid date format. Please use MM/DD/YYYY", Toast.LENGTH_SHORT).show();
-                return true;
             } else {
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -332,17 +314,23 @@ public class TaskDetails extends AppCompatActivity {
                 Intent intent = new Intent(TaskDetails.this, MyReceiver.class);
                 PendingIntent sender = PendingIntent.getBroadcast(TaskDetails.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, sender);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+                    if (alarmManager.canScheduleExactAlarms()){
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, sender);
+                    }
+                }
+                else{
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, sender);
+                }
 
-
-                Long triggerTimeStart = startDate.getTime();
+                long triggerTimeStart = startDate.getTime();
                 Intent intentStart = new Intent(TaskDetails.this, MyReceiver.class);
                 intentStart.putExtra("name", edit_taskName.getText().toString());
                 intentStart.putExtra("date", edit_startDate.getText().toString());
                 PendingIntent senderStart = PendingIntent.getBroadcast(TaskDetails.this, ++Main.numAlert, intentStart, PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeStart, senderStart);
 
-                Long triggerTimeEnd = endDate.getTime();
+                long triggerTimeEnd = endDate.getTime();
                 Intent intentEnd = new Intent(TaskDetails.this, MyReceiver.class);
                 intentEnd.putExtra("name", edit_taskName.getText().toString());
                 intentEnd.putExtra("date", edit_endDate.getText().toString());
@@ -352,8 +340,8 @@ public class TaskDetails extends AppCompatActivity {
                         edit_taskName.getText().toString() +  " notifications set for " + edit_startDate.getText().toString() + " and " + edit_endDate.getText().toString(),
                         Toast.LENGTH_SHORT).show();
                 onResume();
-                return true;
             }
+            return true;
         }
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -367,7 +355,7 @@ public class TaskDetails extends AppCompatActivity {
         // After updating Task details, refresh TaskDetails
         super.onResume();
         List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
-        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, repository, taskName, taskStart, taskEnd);
+        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, taskName, taskStart, taskEnd);
         RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
         recyclerView.setAdapter(subtaskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

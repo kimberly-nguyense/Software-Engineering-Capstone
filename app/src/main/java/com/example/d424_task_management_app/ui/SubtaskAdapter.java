@@ -12,12 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424_task_management_app.R;
-import com.example.d424_task_management_app.database.Repository;
 import com.example.d424_task_management_app.entities.Subtask;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskViewHolder> {
     private String taskName;
@@ -26,13 +23,10 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
     private List<Subtask> mSubtasks;
     private final Context context;
     private final LayoutInflater mInflater;
-    private final Repository repository;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public SubtaskAdapter(Context context, Repository repository, String taskName, String taskStart, String taskEnd) {
+    public SubtaskAdapter(Context context, String taskName, String taskStart, String taskEnd) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.repository = repository;
         this.taskStart = taskStart;
         this.taskEnd = taskEnd;
         this.taskName = taskName;
@@ -76,7 +70,6 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
         if(mSubtasks != null) {
             Subtask current = mSubtasks.get(position);
             holder.subtaskItemView.setText(current.getSubtaskName());
-            int subtaskID = current.getSubtaskID()-1;
             holder.subtaskItemView2.setText(current.getSubtaskDate());
         } else {
             holder.subtaskItemView.setText("No Subtask Name");
