@@ -11,7 +11,7 @@ import com.example.d424_task_management_app.dao.TaskDAO;
 import com.example.d424_task_management_app.entities.Subtask;
 import com.example.d424_task_management_app.entities.Task;
 
-@Database(entities = {Task.class, Subtask.class}, version = 1, exportSchema = false)
+@Database(entities = {Task.class, Subtask.class}, version = 2, exportSchema = false)
 public abstract class TaskDatabaseBuilder extends RoomDatabase {
     public abstract TaskDAO TaskDAO();
     public abstract SubtaskDAO SubtaskDAO();

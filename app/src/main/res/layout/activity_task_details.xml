@@ -87,7 +87,7 @@
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:background="#FBF8EF"
-                    android:hint="Omni Dallas Category"
+                    android:hint="School"
                     android:minWidth="300dp"
                     android:minHeight="48dp"
                     android:padding="5dp"
