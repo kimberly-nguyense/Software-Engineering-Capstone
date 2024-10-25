@@ -3,14 +3,14 @@ package com.example.d424_task_management_app.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Vacations")
-public class Vacation {
-    public String getVacationName() {
-        return vacationName;
+@Entity(tableName = "Tasks")
+public class Task {
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setVacationName(String VacationName) {
-        this.vacationName = VacationName;
+    public void setTaskName(String TaskName) {
+        this.taskName = TaskName;
     }
 
     public String getHotelName() {
@@ -21,29 +21,29 @@ public class Vacation {
         this.hotelName = hotelName;
     }
 
-    public int getvacationID() {
-        return vacationID;
+    public int gettaskID() {
+        return taskID;
     }
 
-    public void setvacationID(int vacationID) {
-        this.vacationID = vacationID;
+    public void settaskID(int taskID) {
+        this.taskID = taskID;
     }
 
-    public Vacation(int vacationID, String vacationName, String hotelName, String startDate, String endDate) {
+    public Task(int taskID, String taskName, String hotelName, String startDate, String endDate) {
         this.hotelName = hotelName;
-        this.vacationName = vacationName;
-        this.vacationID = vacationID;
+        this.taskName = taskName;
+        this.taskID = taskID;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public void setVacationID(int vacationID) {
-        this.vacationID = vacationID;
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
     }
 
     @PrimaryKey(autoGenerate = true)
-    private int vacationID;
-    private String vacationName;
+    private int taskID;
+    private String taskName;
     private String hotelName;
 
     public String getStartDate() {
@@ -67,8 +67,8 @@ public class Vacation {
     private String endDate;
 
 
-    public int getVacationID() {
-        return vacationID;
+    public int getTaskID() {
+        return taskID;
     }
 
 }

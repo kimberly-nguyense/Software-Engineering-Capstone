@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Save Excursion"
-        android:id="@+id/save_excursion"/>
-    <item android:title="Delete Excursion"
-        android:id="@+id/delete_excursion" />
+    <item android:title="Save Subtask"
+        android:id="@+id/save_subtask"/>
+    <item android:title="Delete Subtask"
+        android:id="@+id/delete_subtask" />
      <item android:title="Notify on Date"
         android:id="@+id/notify_date"/>
 </menu>

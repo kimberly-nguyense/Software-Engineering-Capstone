@@ -2,75 +2,64 @@ package com.example.d424_task_management_app.database;
 
 import android.app.Application;
 
-import com.example.d424_task_management_app.dao.ExcursionDAO;
-import com.example.d424_task_management_app.dao.VacationDAO;
-import com.example.d424_task_management_app.entities.Excursion;
-import com.example.d424_task_management_app.entities.Vacation;
+import com.example.d424_task_management_app.dao.SubtaskDAO;
+import com.example.d424_task_management_app.dao.TaskDAO;
+import com.example.d424_task_management_app.entities.Subtask;
+import com.example.d424_task_management_app.entities.Task;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Repository {
-    private final VacationDAO mVacationDAO;
-    private final ExcursionDAO mExcursionDAO;
+    private final TaskDAO mTaskDAO;
+    private final SubtaskDAO mSubtaskDAO;
 
-    private List<Vacation> mAllVacations;
-    private List<Excursion> mAllExcursions;
+    private List<Task> mAllTasks;
+    private List<Subtask> mAllSubtasks;
 
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public Repository(Application application){
-        VacationDatabaseBuilder db = VacationDatabaseBuilder.getDatabase(application);
-        mVacationDAO = db.VacationDAO();
-        mExcursionDAO = db.ExcursionDAO();
+        TaskDatabaseBuilder db = TaskDatabaseBuilder.getDatabase(application);
+        mTaskDAO = db.TaskDAO();
+        mSubtaskDAO = db.SubtaskDAO();
     }
 
-    public List<Vacation> getmAllVacations(){
+    public List<Task> getmAllTasks(){
         databaseWriteExecutor.execute(() -> {
-            mAllVacations = mVacationDAO.getAllVacations();
+            mAllTasks = mTaskDAO.getAllTasks();
         });
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
             throw new RuntimeException(e);
         }
-        return mAllVacations;
+        return mAllTasks;
     }
 
-    public Vacation getVacation(int vacationID) {
-        return mVacationDAO.getVacation(vacationID);
+    public Task getTask(int taskID) {
+        return mTaskDAO.getTask(taskID);
     }
 
-    public long insert(Vacation vacation){
-        final long[] vacationID = new long[1];
+    public long insert(Task task){
+        final long[] taskID = new long[1];
         databaseWriteExecutor.execute(() -> {
-            vacationID[0] = mVacationDAO.insert(vacation);
+            taskID[0] = mTaskDAO.insert(task);
         });
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
-        return vacationID[0];
+        return taskID[0];
     }
 
-    public void update(Vacation vacation){
+    public void update(Task task){
         databaseWriteExecutor.execute(() -> {
-            mVacationDAO.update(vacation);
-        });
-        try{
-            Thread.sleep(1000);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void delete(Vacation vacation){
-        databaseWriteExecutor.execute(() -> {
-            mVacationDAO.delete(vacation);
+            mTaskDAO.update(task);
         });
         try{
             Thread.sleep(1000);
@@ -79,33 +68,44 @@ public class Repository {
         }
     }
 
-    public List<Excursion> getmAllExcursions(){
+    public void delete(Task task){
         databaseWriteExecutor.execute(() -> {
-            mAllExcursions = mExcursionDAO.getAllExcursions();
+            mTaskDAO.delete(task);
+        });
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    public List<Subtask> getmAllSubtasks(){
+        databaseWriteExecutor.execute(() -> {
+            mAllSubtasks = mSubtaskDAO.getAllSubtasks();
         });
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
             throw new RuntimeException(e);
         }
-        return mAllExcursions;
+        return mAllSubtasks;
     }
 
-    public List<Excursion> getAssociatedExcursions(int vacationID){
+    public List<Subtask> getAssociatedSubtasks(int taskID){
         databaseWriteExecutor.execute(() -> {
-            mAllExcursions = mExcursionDAO.getAssociatedExcursions(vacationID);
+            mAllSubtasks = mSubtaskDAO.getAssociatedSubtasks(taskID);
         });
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
             throw new RuntimeException(e);
         }
-        return mAllExcursions;
+        return mAllSubtasks;
     }
 
-    public void insert(Excursion excursion){
+    public void insert(Subtask subtask){
         databaseWriteExecutor.execute(() -> {
-            mExcursionDAO.insert(excursion);
+            mSubtaskDAO.insert(subtask);
         });
         try{
             Thread.sleep(1000);
@@ -113,9 +113,9 @@ public class Repository {
             e.printStackTrace();
         }
     }
-    public void update(Excursion excursion){
+    public void update(Subtask subtask){
         databaseWriteExecutor.execute(() -> {
-            mExcursionDAO.update(excursion);
+            mSubtaskDAO.update(subtask);
         });
         try{
             Thread.sleep(1000);
@@ -124,9 +124,9 @@ public class Repository {
         }
     }
 
-    public void delete(Excursion excursion){
+    public void delete(Subtask subtask){
         databaseWriteExecutor.execute(() -> {
-            mExcursionDAO.delete(excursion);
+            mSubtaskDAO.delete(subtask);
         });
         try{
             Thread.sleep(1000);
@@ -137,11 +137,11 @@ public class Repository {
 
     public void deleteAll() {
         databaseWriteExecutor.execute(() -> {
-            mVacationDAO.deleteAll();
-            mExcursionDAO.deleteAll();
+            mTaskDAO.deleteAll();
+            mSubtaskDAO.deleteAll();
 
-            mVacationDAO.resetVacationIdGenerator();
-            mExcursionDAO.resetExcursionIdGenerator();
+            mTaskDAO.resetTaskIdGenerator();
+            mSubtaskDAO.resetSubtaskIdGenerator();
         });
         try{
             Thread.sleep(1000);

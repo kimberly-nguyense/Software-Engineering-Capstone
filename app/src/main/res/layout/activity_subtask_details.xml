@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#27523D"
-    tools:context=".ui.ExcursionDetails">
+    tools:context=".ui.SubtaskDetails">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,13 +28,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Vacation Name"
+                android:text="Task Name"
                 android:textAlignment="viewStart"
                 android:textColor="#FDFCF8"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/edit_vacationName"
+                android:id="@+id/edit_taskName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -57,13 +57,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Excursion Name"
+                android:text="Subtask Name"
                 android:textAlignment="viewStart"
                 android:textColor="#FDFCF8"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/edit_excursionName"
+                android:id="@+id/edit_subtaskName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -86,13 +86,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Excursion Date"
+                android:text="Subtask Date"
                 android:textAlignment="viewStart"
                 android:textColor="#FDFCF8"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/edit_excursionDate"
+                android:id="@+id/edit_subtaskDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -115,7 +115,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/edit_excursionNote"
+            android:id="@+id/edit_subtaskNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
