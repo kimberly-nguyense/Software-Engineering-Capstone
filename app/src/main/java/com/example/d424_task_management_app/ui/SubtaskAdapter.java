@@ -20,7 +20,7 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
     private String taskName;
     private String taskStart;
     private String taskEnd;
-    private List<Subtask> mSubtasks;
+    private List<Subtask> subtaskList;
     private final Context context;
     private final LayoutInflater mInflater;
 
@@ -42,7 +42,7 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
             subtaskItemView2 = itemView.findViewById(R.id.textView4);
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
-                final Subtask subtask = mSubtasks.get(position);
+                final Subtask subtask = subtaskList.get(position);
                 Intent intent = new Intent(context, SubtaskDetails.class);
                 intent.putExtra("subtaskID", subtask.getSubtaskID());
                 intent.putExtra("subtaskName", subtask.getSubtaskName());
@@ -67,8 +67,8 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
 
     @Override
     public void onBindViewHolder(@NonNull SubtaskViewHolder holder, int position) {
-        if(mSubtasks != null) {
-            Subtask current = mSubtasks.get(position);
+        if(subtaskList != null) {
+            Subtask current = subtaskList.get(position);
             holder.subtaskItemView.setText(current.getSubtaskName());
             holder.subtaskItemView2.setText(current.getSubtaskDate());
         } else {
@@ -80,14 +80,14 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
 
     @Override
     public int getItemCount() {
-        if (mSubtasks == null) {
+        if (subtaskList == null) {
             return 0;
         }
-        return mSubtasks.size();
+        return subtaskList.size();
     }
 
     public void setSubtasks(List<Subtask> subtasks) {
-        mSubtasks = subtasks;
+        subtaskList = subtasks;
         notifyDataSetChanged();
     }
 

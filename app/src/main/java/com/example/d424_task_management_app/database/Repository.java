@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Repository {
-    private final TaskDAO mTaskDAO;
+    private final TaskDAO taskListDAO;
     private final SubtaskDAO mSubtaskDAO;
 
     private List<Task> mAllTasks;
@@ -24,12 +24,12 @@ public class Repository {
 
     public Repository(Application application){
         TaskDatabaseBuilder db = TaskDatabaseBuilder.getDatabase(application);
-        mTaskDAO = db.TaskDAO();
+        taskListDAO = db.TaskDAO();
         mSubtaskDAO = db.SubtaskDAO();
     }
 
     public List<Task> getmAllTasks(){
-        databaseWriteExecutor.execute(() -> mAllTasks = mTaskDAO.getAllTasks());
+        databaseWriteExecutor.execute(() -> mAllTasks = taskListDAO.getAllTasks());
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -39,12 +39,12 @@ public class Repository {
     }
 
     public Task getTask(int taskID) {
-        return mTaskDAO.getTask(taskID);
+        return taskListDAO.getTask(taskID);
     }
 
     public long insert(Task task){
         final long[] taskID = new long[1];
-        databaseWriteExecutor.execute(() -> taskID[0] = mTaskDAO.insert(task));
+        databaseWriteExecutor.execute(() -> taskID[0] = taskListDAO.insert(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -54,7 +54,7 @@ public class Repository {
     }
 
     public void update(Task task){
-        databaseWriteExecutor.execute(() -> mTaskDAO.update(task));
+        databaseWriteExecutor.execute(() -> taskListDAO.update(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -63,7 +63,7 @@ public class Repository {
     }
 
     public void delete(Task task){
-        databaseWriteExecutor.execute(() -> mTaskDAO.delete(task));
+        databaseWriteExecutor.execute(() -> taskListDAO.delete(task));
         try{
             Thread.sleep(1000);
         }catch (InterruptedException e){
@@ -119,10 +119,10 @@ public class Repository {
 
     public void deleteAll() {
         databaseWriteExecutor.execute(() -> {
-            mTaskDAO.deleteAll();
+            taskListDAO.deleteAll();
             mSubtaskDAO.deleteAll();
 
-            mTaskDAO.resetTaskIdGenerator();
+            taskListDAO.resetTaskIdGenerator();
             mSubtaskDAO.resetSubtaskIdGenerator();
         });
         try{

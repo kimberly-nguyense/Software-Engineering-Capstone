@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,9 +23,12 @@ import com.example.d424_task_management_app.entities.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 public class TaskList extends AppCompatActivity {
     private Repository repository;
+    private TaskAdapter taskAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,24 @@ public class TaskList extends AppCompatActivity {
             return insets;
         });
 
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (taskAdapter == null) {
+                    return false;
+                }
+                taskAdapter.filter(newText);
+                return true;
+            }
+        });
+
+
         FloatingActionButton fab = findViewById(R.id.floatingActionButton_addTask);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(TaskList.this, TaskDetails.class);
@@ -45,10 +68,13 @@ public class TaskList extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.taskRecyclerView);
         repository = new Repository(getApplication());
-        List<Task> allTasks = repository.getmAllTasks();
-        final TaskAdapter taskAdapter = new TaskAdapter(this);
+        taskAdapter = new TaskAdapter(this);
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void updateTasks(){
+        List<Task> allTasks = repository.getmAllTasks();
         taskAdapter.setTasks(allTasks);
     }
 
@@ -68,14 +94,16 @@ public class TaskList extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.add_sample_data) {
             repository = new Repository(getApplication());
-            Task task = new Task(0, "Dallas", "Marriott", "05/23/2024", "06/15/2024");
+            Task task = new Task(0, "D424 Capstone", "School", "09/15/2024", "10/31/2024");
             int taskID = (int) repository.insert(task);
-            Subtask subtask = new Subtask(0, "Art Gallery", "05/23/2024", taskID, "Art Gallery of Dallas");
+            Subtask subtask = new Subtask(0, "Task 3", "10/26/2024", taskID, "Complete and submit Task 3.");
+            repository.insert(subtask);
+            subtask = new Subtask(0, "Task 4", "10/28/2024", taskID, "Complete and submit Task 4.");
             repository.insert(subtask);
 
-            task = new Task(0, "Carrollton", "Courtyard", "05/23/2024", "06/15/2024");
+            task = new Task(0, "Leetcode", "Interview Prep", "05/23/2024", "12/31/2024");
             taskID = (int) repository.insert(task);
-            subtask = new Subtask(0, "Museum", "05/23/2024", taskID, "Museum of Art");
+            subtask = new Subtask(0, "FizzBuzz", "08/12/2024", taskID, "Watch a tutorial on how to solve FizzBuzz.");
             repository.insert(subtask);
             Toast.makeText(TaskList.this, "Sample Data Added", Toast.LENGTH_SHORT).show();
             onResume();
@@ -86,11 +114,6 @@ public class TaskList extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        List<Task> allTasks = repository.getmAllTasks();
-        final TaskAdapter taskAdapter = new TaskAdapter(this);
-        RecyclerView recyclerView = findViewById(R.id.taskRecyclerView);
-        recyclerView.setAdapter(taskAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        taskAdapter.setTasks(allTasks);
+        updateTasks();
     }
 }

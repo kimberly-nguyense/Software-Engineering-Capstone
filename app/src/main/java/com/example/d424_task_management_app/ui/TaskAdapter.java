@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.d424_task_management_app.R;
 import com.example.d424_task_management_app.entities.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-    private List<Task> mTasks;
+    private List<Task> taskList;
+    private List<Task> filteredTaskList;
     private final Context context;
     private final LayoutInflater mInflater;
 
@@ -35,7 +37,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskItemView2 = itemView.findViewById(R.id.textView3);
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
-                final Task task = mTasks.get(position);
+                final Task task = taskList.get(position);
                 Intent intent = new Intent(context, TaskDetails.class);
                 intent.putExtra("taskID", task.getTaskID());
                 intent.putExtra("taskName", task.getTaskName());
@@ -57,8 +59,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        if(mTasks != null) {
-            Task current = mTasks.get(position);
+        if(filteredTaskList != null) {
+            Task current = filteredTaskList.get(position);
             holder.taskItemView.setText(current.getTaskName());
             holder.taskItemView2.setText(current.getStartDate() + " - " + current.getEndDate());
         } else {
@@ -67,17 +69,34 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
-    @Override
-    public int getItemCount() {
-        if (mTasks == null) {
-            return 0;
-        }
-        return mTasks.size();
-    }
+    public void filter(String query) {
+        filteredTaskList = new ArrayList<>();
+        query = query.toLowerCase();
 
-    public void setTasks(List<Task> tasks) {
-        mTasks = tasks;
+        if (query.isEmpty()) {
+            filteredTaskList.addAll(taskList);
+        } else {
+            for (Task task : taskList) {
+                if (task.getTaskName().toLowerCase().contains(query)
+                        || task.getCategoryName().toLowerCase().contains(query)) {
+                    filteredTaskList.add(task);
+                }
+            }
+        }
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemCount() {
+        if (filteredTaskList == null) {
+            return 0;
+        }
+        return filteredTaskList.size();
+    }
+
+    public void setTasks(List<Task> tasks) {
+        taskList = tasks;
+        filteredTaskList = new ArrayList<>(taskList);
+        notifyDataSetChanged();
+    }
 }

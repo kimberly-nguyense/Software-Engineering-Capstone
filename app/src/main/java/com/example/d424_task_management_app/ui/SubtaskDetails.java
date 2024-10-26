@@ -62,7 +62,7 @@ public class SubtaskDetails extends AppCompatActivity {
         });
         repository = new Repository(getApplication());
         // Get input fields
-        editTaskName = findViewById(R.id.edit_taskName);
+        editTaskName = findViewById(R.id.text_taskName);
         editName = findViewById(R.id.edit_subtaskName);
         editDate = findViewById(R.id.edit_subtaskDate);
         editNote = findViewById(R.id.edit_subtaskNote);

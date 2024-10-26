@@ -28,6 +28,9 @@ public interface TaskDAO {
     @Query("SELECT * FROM Tasks WHERE taskID = :taskID")
     Task getTask(int taskID);
 
+    @Query("SELECT * FROM Tasks WHERE taskName = :taskName ORDER BY endDate ASC")
+    List<Task> searchTasks(String taskName);
+
     @Query("DELETE FROM Tasks")
     void deleteAll();
 

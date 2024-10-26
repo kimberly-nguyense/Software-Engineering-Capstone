@@ -25,7 +25,7 @@ public class MyReceiver extends BroadcastReceiver {
         createNotificationChannel(context, channel_id);
         Notification notification;
         notification = new NotificationCompat.Builder(context, channel_id)
-                .setSmallIcon(R.drawable.baseline_houseboat_24)
+                .setSmallIcon(R.drawable.baseline_edit_calendar_24)
                 .setContentText(intent.getStringExtra("name") + " " + intent.getStringExtra("date"))
                 .setContentTitle("Notification Test").build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -28,6 +28,9 @@ public interface SubtaskDAO {
     @Query("SELECT * FROM Subtasks WHERE taskID = :prod ORDER BY subtaskID ASC")
     List<Subtask> getAssociatedSubtasks(int prod);
 
+    @Query("SELECT * FROM Subtasks WHERE subtaskName LIKE :subtaskName ORDER BY subtaskDate ASC")
+    List<Subtask> searchSubtasks(String subtaskName);
+
     @Query("DELETE FROM Subtasks")
     void deleteAll();
 

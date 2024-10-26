@@ -25,7 +25,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="#27523D"
+        android:background="#1C3CF3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -58,7 +58,7 @@
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:background="#FBF8EF"
-                    android:hint="Dallas Trip"
+                    android:hint="D424 Homework"
                     android:minWidth="300dp"
                     android:minHeight="48dp"
                     android:padding="5dp"

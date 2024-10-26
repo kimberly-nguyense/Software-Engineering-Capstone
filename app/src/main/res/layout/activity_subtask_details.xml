@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#27523D"
+    android:background="#1C3CF3"
     tools:context=".ui.SubtaskDetails">
 
     <LinearLayout
@@ -34,14 +34,14 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/edit_taskName"
+                android:id="@+id/text_taskName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:minWidth="300dp"
                 android:minHeight="48dp"
-                android:textColor="#FDFCF8"
+                android:textColor="@color/whack"
                 android:padding="5dp"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -70,7 +70,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="#FBF8EF"
-                android:hint="Cooking Lesson"
+                android:hint="Task 3"
                 android:minWidth="300dp"
                 android:minHeight="48dp"
                 android:padding="5dp"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:text="Subtask Date"
+                android:text="Subtask Due Date"
                 android:textAlignment="viewStart"
                 android:textColor="#FDFCF8"
                 android:textSize="20sp" />
@@ -123,7 +123,7 @@
             android:layout_margin="10dp"
             android:background="#FBF8EF"
             android:gravity="top"
-            android:hint="Add note here"
+            android:hint="Work on Task 3 and submit for review. Soft deadline 10/25/2024"
             android:minWidth="300dp"
             android:minHeight="300dp"
             android:padding="5dp"
