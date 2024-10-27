@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -57,7 +58,6 @@ public class TaskList extends AppCompatActivity {
                 return true;
             }
         });
-
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton_addTask);
         fab.setOnClickListener(view -> {

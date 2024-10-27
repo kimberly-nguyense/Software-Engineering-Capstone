@@ -38,8 +38,8 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
 
         public SubtaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            subtaskItemView = itemView.findViewById(R.id.textView2);
-            subtaskItemView2 = itemView.findViewById(R.id.textView4);
+            subtaskItemView = itemView.findViewById(R.id.text_taskName);
+            subtaskItemView2 = itemView.findViewById(R.id.text_dueDate);
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 final Subtask subtask = subtaskList.get(position);

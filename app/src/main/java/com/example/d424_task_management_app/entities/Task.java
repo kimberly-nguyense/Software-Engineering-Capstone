@@ -11,6 +11,8 @@ public class Task {
     private String categoryName;
     private String startDate;
     private String endDate;
+    private boolean isCompleted;
+    private long timestampCompleted;
 
     public Task(int taskID, String taskName, String categoryName, String startDate, String endDate) {
         this.categoryName = categoryName;
@@ -49,6 +51,22 @@ public class Task {
     }
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public long getTimestampCompleted() {
+        return timestampCompleted;
+    }
+
+    public void setTimestampCompleted(long timestampCompleted) {
+        this.timestampCompleted = timestampCompleted;
     }
 
     public String toString(){

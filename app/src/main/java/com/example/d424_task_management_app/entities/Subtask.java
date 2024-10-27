@@ -12,6 +12,8 @@ public class Subtask extends Task {
     private String subtaskDate;
     private int taskID;
     private String note;
+    private boolean isCompleted;
+    private long timestampCompleted;
 
     public Subtask(int subtaskID, String subtaskName, String subtaskDate, int taskID, String note) {
         super(taskID, "", "", "", "");
@@ -51,6 +53,22 @@ public class Subtask extends Task {
     }
     public void setTaskID(int taskID) {
         this.taskID = taskID;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public long getTimestampCompleted() {
+        return timestampCompleted;
+    }
+
+    public void setTimestampCompleted(long timestampCompleted) {
+        this.timestampCompleted = timestampCompleted;
     }
 
     @NonNull

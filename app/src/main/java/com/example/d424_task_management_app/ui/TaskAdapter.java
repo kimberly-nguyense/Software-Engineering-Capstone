@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,11 +31,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public class TaskViewHolder extends RecyclerView.ViewHolder {
         private final TextView taskItemView;
         private final TextView taskItemView2;
+        private final TextView taskItemView3;
+        private final CheckBox isCompleted;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             taskItemView = itemView.findViewById(R.id.textView1);
-            taskItemView2 = itemView.findViewById(R.id.textView3);
+            taskItemView2 = itemView.findViewById(R.id.text_startDate);
+            taskItemView3 = itemView.findViewById(R.id.text_endDate);
+            isCompleted = itemView.findViewById(R.id.isCompleted);
+            isCompleted.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                final Task task = taskList.get(position);
+                task.setCompleted(!task.isCompleted());
+            });
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 final Task task = taskList.get(position);
@@ -46,6 +56,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 intent.putExtra("taskEndDate", task.getEndDate());
                 intent.putExtra("taskID", task.getTaskID());
                 intent.putExtra("isTaskSaved", true);
+                intent.putExtra("isTaskCompleted", task.isCompleted());
                 context.startActivity(intent);
             });
         }
@@ -62,10 +73,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         if(filteredTaskList != null) {
             Task current = filteredTaskList.get(position);
             holder.taskItemView.setText(current.getTaskName());
-            holder.taskItemView2.setText(current.getStartDate() + " - " + current.getEndDate());
+            holder.taskItemView2.setText(current.getStartDate());
+            holder.taskItemView3.setText(current.getEndDate());
+            holder.isCompleted.setChecked(current.isCompleted());
         } else {
             holder.taskItemView.setText("No Task Name");
-            holder.taskItemView2.setText("No Task Date");
+            holder.taskItemView2.setText("No Task Start Date");
+            holder.taskItemView3.setText("No Task End Date");
+            holder.isCompleted.setChecked(false);
         }
     }
 
