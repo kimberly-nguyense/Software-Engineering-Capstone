@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424_task_management_app.R;
+import com.example.d424_task_management_app.database.Repository;
 import com.example.d424_task_management_app.entities.Task;
 
 import java.util.ArrayList;
@@ -22,10 +23,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private List<Task> filteredTaskList;
     private final Context context;
     private final LayoutInflater mInflater;
+    private final Repository repository;
 
-    public TaskAdapter(Context context) {
+    public TaskAdapter(Context context, Repository repository) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.repository = repository;
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -44,6 +47,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 int position = getAdapterPosition();
                 final Task task = taskList.get(position);
                 task.setCompleted(!task.isCompleted());
+                if (task.isCompleted()) {
+                    task.setTimestampCompleted(System.currentTimeMillis());
+                }else{
+                    task.setTimestampCompleted(0);
+                }
+                repository.update(task);
             });
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();

@@ -2,6 +2,7 @@ package com.example.d424_task_management_app.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Subtasks")

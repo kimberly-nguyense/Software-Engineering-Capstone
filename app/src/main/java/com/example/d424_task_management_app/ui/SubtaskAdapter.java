@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424_task_management_app.R;
+import com.example.d424_task_management_app.database.Repository;
 import com.example.d424_task_management_app.entities.Subtask;
 
 import java.util.List;
@@ -23,23 +25,35 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
     private List<Subtask> subtaskList;
     private final Context context;
     private final LayoutInflater mInflater;
+    private final Repository repository;
 
-    public SubtaskAdapter(Context context, String taskName, String taskStart, String taskEnd) {
+    public SubtaskAdapter(Context context, Repository repository) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.taskStart = taskStart;
-        this.taskEnd = taskEnd;
-        this.taskName = taskName;
+        this.repository = repository;
     }
 
     public class SubtaskViewHolder extends RecyclerView.ViewHolder {
         private final TextView subtaskItemView;
         private final TextView subtaskItemView2;
+        private final CheckBox isCompleted;
 
         public SubtaskViewHolder(@NonNull View itemView) {
             super(itemView);
             subtaskItemView = itemView.findViewById(R.id.text_taskName);
             subtaskItemView2 = itemView.findViewById(R.id.text_dueDate);
+            isCompleted = itemView.findViewById(R.id.isCompleted);
+            isCompleted.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                final Subtask subtask = subtaskList.get(position);
+                subtask.setCompleted(!subtask.isCompleted());
+                if (subtask.isCompleted()) {
+                    subtask.setTimestampCompleted(System.currentTimeMillis());
+                }else{
+                    subtask.setTimestampCompleted(0);
+                }
+                repository.update(subtask);
+            });
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 final Subtask subtask = subtaskList.get(position);
@@ -50,10 +64,13 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
                 intent.putExtra("taskID", subtask.getTaskID());
                 intent.putExtra("subtaskNote", subtask.getNote());
                 taskName = ((Activity) context).getIntent().getStringExtra("taskName");
+                taskStart = ((Activity) context).getIntent().getStringExtra("taskStart");
+                taskEnd = ((Activity) context).getIntent().getStringExtra("taskEnd");
                 intent.putExtra("taskName", taskName);
                 intent.putExtra("taskStart", taskStart);
                 intent.putExtra("taskEnd", taskEnd);
                 intent.putExtra("isSubtaskSaved", true);
+                intent.putExtra("isSubtaskCompleted", subtask.isCompleted());
                 context.startActivity(intent);
             });
         }
@@ -71,10 +88,11 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
             Subtask current = subtaskList.get(position);
             holder.subtaskItemView.setText(current.getSubtaskName());
             holder.subtaskItemView2.setText(current.getSubtaskDate());
+            holder.isCompleted.setChecked(current.isCompleted());
         } else {
             holder.subtaskItemView.setText("No Subtask Name");
             holder.subtaskItemView2.setText("No Subtask Date");
-
+            holder.isCompleted.setChecked(false);
         }
     }
 

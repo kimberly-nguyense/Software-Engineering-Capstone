@@ -35,21 +35,21 @@ import java.util.List;
 import java.util.Locale;
 
 public class TaskDetails extends AppCompatActivity {
-    String taskName;
-    String categoryName;
-    String taskStart;
-    String taskEnd;
-    int taskID;
-    EditText edit_taskName;
-    EditText edit_categoryName;
-    TextView edit_startDate;
-    TextView edit_endDate;
-    Repository repository;
-    boolean isTaskSaved = false;
-
-    DatePickerDialog.OnDateSetListener startDateListener;
-    DatePickerDialog.OnDateSetListener endDateListener;
-    final Calendar myCalendar = Calendar.getInstance();
+    private String taskName;
+    private String categoryName;
+    private String taskStart;
+    private String taskEnd;
+    private int taskID;
+    private EditText edit_taskName;
+    private EditText edit_categoryName;
+    private TextView edit_startDate;
+    private TextView edit_endDate;
+    private Repository repository;
+    private boolean isTaskSaved = false;
+    private DatePickerDialog.OnDateSetListener startDateListener;
+    private DatePickerDialog.OnDateSetListener endDateListener;
+    private final Calendar myCalendar = Calendar.getInstance();
+    private SubtaskAdapter subtaskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +99,7 @@ public class TaskDetails extends AppCompatActivity {
         // Set up Recycler View to show subtasks associated with task
         RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
         repository = new Repository(getApplication());
-        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, taskName, taskStart, taskEnd);
+        subtaskAdapter = new SubtaskAdapter(this, repository);
         recyclerView.setAdapter(subtaskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
@@ -128,6 +128,11 @@ public class TaskDetails extends AppCompatActivity {
             myCalendar.set(Calendar.DAY_OF_MONTH, day);
             updateLabelEndDate();
         };
+    }
+    
+    public void updateTasks(){
+        List<Subtask> associatedSubtasks = repository.getAssociatedSubtasks(taskID);
+        subtaskAdapter.setSubtasks(associatedSubtasks);
     }
 
     public void updateLabelStartDate() {
@@ -354,11 +359,6 @@ public class TaskDetails extends AppCompatActivity {
     protected void onResume() {
         // After updating Task details, refresh TaskDetails
         super.onResume();
-        List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
-        final SubtaskAdapter subtaskAdapter = new SubtaskAdapter(this, taskName, taskStart, taskEnd);
-        RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
-        recyclerView.setAdapter(subtaskAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        subtaskAdapter.setSubtasks(filteredSubtasks);
+        updateTasks();
     }
 }
