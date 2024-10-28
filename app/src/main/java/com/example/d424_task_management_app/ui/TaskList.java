@@ -1,14 +1,18 @@
 package com.example.d424_task_management_app.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.CheckBox;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
@@ -23,8 +27,10 @@ import com.example.d424_task_management_app.entities.Subtask;
 import com.example.d424_task_management_app.entities.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.logging.Handler;
+import java.util.Locale;
 
 public class TaskList extends AppCompatActivity {
     private Repository repository;
@@ -84,13 +90,30 @@ public class TaskList extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.delete_all_data) {
-            repository = new Repository(getApplication());
-            repository.deleteAll();
-            Toast.makeText(TaskList.this, "All Data Deleted", Toast.LENGTH_SHORT).show();
-            onResume();
+        if (item.getItemId() == R.id.show_incomplete_tasks) {
+            List<Task> incompleteTasks = repository.getIncompleteTasks();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_report_list, null);
+            builder.setView(dialogView);
+
+            String currentDateTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss a", Locale.getDefault()).format(new Date());
+            TextView currentTimeTextView = dialogView.findViewById(R.id.currentTime);
+            currentTimeTextView.setText("Timestamp: " + currentDateTimestamp);
+
+            RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerViewReport);
+            ReportAdapter reportAdapter = new ReportAdapter(incompleteTasks, getLayoutInflater(), currentDateTimestamp);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(reportAdapter);
+
+            // Show the dialog
+            builder.setTitle("Report")
+                    .setPositiveButton("OK", null)
+                    .show();
+            return true;
         }
         if (item.getItemId() == R.id.add_sample_data) {
             repository = new Repository(getApplication());
@@ -108,7 +131,25 @@ public class TaskList extends AppCompatActivity {
             Toast.makeText(TaskList.this, "Sample Data Added", Toast.LENGTH_SHORT).show();
             onResume();
         }
+        if (item.getItemId() == R.id.delete_all_data) {
+            repository = new Repository(getApplication());
+            repository.deleteAll();
+            Toast.makeText(TaskList.this, "All Data Deleted", Toast.LENGTH_SHORT).show();
+            onResume();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public StringBuilder generateIncompleteReport(List<Task> incompleteTasks) {
+        StringBuilder reportContent = new StringBuilder();
+        for (Task task : incompleteTasks) {
+            reportContent.append("Task Name: ").append(task.getTaskName())
+                    .append("Category: ").append(task.getCategoryName())
+                    .append("Start Date: ").append(task.getStartDate())
+                    .append("End Date: ").append(task.getEndDate())
+                    .append("\n");
+        }
+        return reportContent;
     }
 
     @Override

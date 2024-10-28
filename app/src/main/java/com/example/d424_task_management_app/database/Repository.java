@@ -131,4 +131,14 @@ public class Repository {
             e.printStackTrace();
         }
     }
+
+    public List<Task> getIncompleteTasks(){
+        databaseWriteExecutor.execute(() -> mAllTasks = taskListDAO.getIncompleteTasks());
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+            }
+        return mAllTasks;
+    }
 }
