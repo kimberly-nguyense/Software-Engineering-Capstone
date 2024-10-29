@@ -25,6 +25,11 @@
         </receiver>
 
         <activity
+            android:name=".ui.CalendarActivity"
+            android:exported="false"
+            android:label="Calendar View"
+            android:parentActivityName=".ui.TaskList" />
+        <activity
             android:name=".ui.SubtaskDetails"
             android:exported="false"
             android:label="Subtask Details"

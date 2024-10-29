@@ -21,6 +21,17 @@
         app:srcCompat="@drawable/baseline_add_24"
         tools:ignore="HardcodedText" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floatingActionButton_calendar"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        app:srcCompat="@drawable/baseline_calendar_today_24"
+        app:layout_constraintRight_toLeftOf="@+id/floatingActionButton_addTask"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,9 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
-            android:queryHint=""
             app:iconifiedByDefault="false"
-            app:queryHint="D424 Capstone" />
+            app:queryHint="Search Tasks" />
 
 
         <androidx.recyclerview.widget.RecyclerView

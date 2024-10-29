@@ -36,4 +36,7 @@ public interface TaskDAO {
 
     @Query("DELETE FROM sqlite_sequence WHERE name = 'Tasks'")
     void resetTaskIdGenerator();
+
+    @Query("SELECT * FROM Tasks WHERE startDate <= :selectedDate AND endDate >= :selectedDate")
+    List<Task> getTasksByDate(String selectedDate);
 }

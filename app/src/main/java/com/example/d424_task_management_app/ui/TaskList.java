@@ -36,6 +36,7 @@ public class TaskList extends AppCompatActivity {
     private Repository repository;
     private TaskAdapter taskAdapter;
     private RecyclerView recyclerView;
+    private String currentDateTimestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class TaskList extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        currentDateTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss a", Locale.getDefault()).format(new Date());
 
         SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -63,6 +66,12 @@ public class TaskList extends AppCompatActivity {
                 taskAdapter.filter(newText);
                 return true;
             }
+        });
+
+        FloatingActionButton calendarButton = findViewById(R.id.floatingActionButton_calendar);
+        calendarButton.setOnClickListener(view -> {
+            Intent intent = new Intent(TaskList.this, CalendarActivity.class);
+            startActivity(intent);
         });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton_addTask);
@@ -100,7 +109,7 @@ public class TaskList extends AppCompatActivity {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_report_list, null);
             builder.setView(dialogView);
 
-            String currentDateTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss a", Locale.getDefault()).format(new Date());
+            currentDateTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss a", Locale.getDefault()).format(new Date());
             TextView currentTimeTextView = dialogView.findViewById(R.id.currentTime);
             currentTimeTextView.setText("Timestamp: " + currentDateTimestamp);
 

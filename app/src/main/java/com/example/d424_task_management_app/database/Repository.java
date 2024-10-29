@@ -141,4 +141,14 @@ public class Repository {
             }
         return mAllTasks;
     }
+
+    public List<Task> getTasksByDate(String selectedDate) {
+        databaseWriteExecutor.execute(() -> mAllTasks = taskListDAO.getTasksByDate(selectedDate));
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+        return mAllTasks;
+    }
 }
