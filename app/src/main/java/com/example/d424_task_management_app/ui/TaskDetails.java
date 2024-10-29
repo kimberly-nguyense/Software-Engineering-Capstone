@@ -89,7 +89,7 @@ public class TaskDetails extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(TaskDetails.this, SubtaskDetails.class);
                 intent.putExtra("taskID", taskID);
-                intent.putExtra("taskName", edit_taskName.getText().toString());
+                intent.putExtra("taskName", edit_taskName.getText().toString().trim());
                 intent.putExtra("taskStart", edit_startDate.getText().toString());
                 intent.putExtra("taskEnd", edit_endDate.getText().toString());
                 startActivity(intent);
@@ -218,6 +218,15 @@ public class TaskDetails extends AppCompatActivity {
             }else if (edit_taskName.getText().toString().isEmpty()) {
                 Toast.makeText(TaskDetails.this, "Task name cannot be empty", Toast.LENGTH_SHORT).show();
                 return true;
+            }else if (edit_categoryName.getText().toString().isEmpty()) {
+                Toast.makeText(TaskDetails.this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
+                return true;
+            }else if (edit_startDate.getText().toString().isEmpty()) {
+                Toast.makeText(TaskDetails.this, "Start date cannot be empty", Toast.LENGTH_SHORT).show();
+                return true;
+            }else if (edit_endDate.getText().toString().isEmpty()) {
+                Toast.makeText(TaskDetails.this, "End date cannot be empty", Toast.LENGTH_SHORT).show();
+                return true;
             }
             // If new task, get next task ID and create new task from input fields
             else if (taskID == -1) {
@@ -227,16 +236,16 @@ public class TaskDetails extends AppCompatActivity {
                     taskID = repository.getmAllTasks().get(repository.getmAllTasks().size() - 1).getTaskID() + 1;
                 }
                 task = new Task(taskID,
-                        edit_taskName.getText().toString(),
-                        edit_categoryName.getText().toString(),
+                        edit_taskName.getText().toString().trim(),
+                        edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Adding Task", Toast.LENGTH_SHORT).show();
                 repository.insert(task);
             } else {
                 task = new Task(taskID,
-                        edit_taskName.getText().toString(),
-                        edit_categoryName.getText().toString(),
+                        edit_taskName.getText().toString().trim(),
+                        edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Updating Task", Toast.LENGTH_SHORT).show();
@@ -255,8 +264,8 @@ public class TaskDetails extends AppCompatActivity {
                 Toast.makeText(TaskDetails.this, "Cannot delete task with associated subtasks", Toast.LENGTH_SHORT).show();
             } else {
                 task = new Task(taskID,
-                        edit_taskName.getText().toString(),
-                        edit_categoryName.getText().toString(),
+                        edit_taskName.getText().toString().trim(),
+                        edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString());
                 Toast.makeText(TaskDetails.this, "Deleting Task", Toast.LENGTH_SHORT).show();
@@ -275,7 +284,7 @@ public class TaskDetails extends AppCompatActivity {
             }
             Intent intent = new Intent(Intent.ACTION_SEND);
             StringBuilder builder = new StringBuilder();
-            builder.append("Task Name: ").append(edit_taskName.getText().toString()).append("\nTask Date: ").append(edit_startDate.getText().toString()).append(" - ").append(edit_endDate.getText().toString()).append("\n\n");
+            builder.append("Task Name: ").append(edit_taskName.getText().toString().trim()).append("\nTask Date: ").append(edit_startDate.getText().toString()).append(" - ").append(edit_endDate.getText().toString()).append("\n\n");
             if (repository.getAssociatedSubtasks(taskID).isEmpty()) {
                 builder.append("No subtasks associated with this task");
             }
@@ -330,19 +339,19 @@ public class TaskDetails extends AppCompatActivity {
 
                 long triggerTimeStart = startDate.getTime();
                 Intent intentStart = new Intent(TaskDetails.this, MyReceiver.class);
-                intentStart.putExtra("name", edit_taskName.getText().toString());
+                intentStart.putExtra("name", edit_taskName.getText().toString().trim());
                 intentStart.putExtra("date", edit_startDate.getText().toString());
                 PendingIntent senderStart = PendingIntent.getBroadcast(TaskDetails.this, ++Main.numAlert, intentStart, PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeStart, senderStart);
 
                 long triggerTimeEnd = endDate.getTime();
                 Intent intentEnd = new Intent(TaskDetails.this, MyReceiver.class);
-                intentEnd.putExtra("name", edit_taskName.getText().toString());
+                intentEnd.putExtra("name", edit_taskName.getText().toString().trim());
                 intentEnd.putExtra("date", edit_endDate.getText().toString());
                 PendingIntent senderEnd = PendingIntent.getBroadcast(TaskDetails.this, ++Main.numAlert, intentEnd, PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeEnd, senderEnd);
                 Toast.makeText(TaskDetails.this,
-                        edit_taskName.getText().toString() +  " notifications set for " + edit_startDate.getText().toString() + " and " + edit_endDate.getText().toString(),
+                        edit_taskName.getText().toString().trim() +  " notifications set for " + edit_startDate.getText().toString() + " and " + edit_endDate.getText().toString(),
                         Toast.LENGTH_SHORT).show();
                 onResume();
             }

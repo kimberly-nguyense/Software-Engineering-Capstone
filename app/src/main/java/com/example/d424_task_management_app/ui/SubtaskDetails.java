@@ -200,6 +200,9 @@ public class SubtaskDetails extends AppCompatActivity {
             else if (editName.getText().toString().isEmpty()) {
                 Toast.makeText(SubtaskDetails.this, "Subtask name cannot be empty", Toast.LENGTH_SHORT).show();
                 return true;
+            }else if (editDate.getText().toString().isEmpty()) {
+                Toast.makeText(SubtaskDetails.this, "Subtask date cannot be empty", Toast.LENGTH_SHORT).show();
+                return true;
             }
             // If new subtask, get next subtask ID and create new subtask from input fields
             else if (subtaskID == -1) {
@@ -209,14 +212,14 @@ public class SubtaskDetails extends AppCompatActivity {
                     subtaskID = repository.getmAllSubtasks().get(repository.getmAllSubtasks().size() - 1).getSubtaskID() + 1;
                 }
                 subtask = new Subtask(subtaskID,
-                        editName.getText().toString(),
+                        editName.getText().toString().trim(),
                         editDate.getText().toString(), taskID,
                         editNote.getText().toString());
                 Toast.makeText(SubtaskDetails.this, "Adding Subtask", Toast.LENGTH_SHORT).show();
                 repository.insert(subtask);
             } else {
                 subtask = new Subtask(subtaskID,
-                        editName.getText().toString(),
+                        editName.getText().toString().trim(),
                         editDate.getText().toString(), taskID,
                         editNote.getText().toString()
                 );
@@ -232,7 +235,7 @@ public class SubtaskDetails extends AppCompatActivity {
                 return true;
             }
             subtask = new Subtask(subtaskID,
-                    editName.getText().toString(),
+                    editName.getText().toString().trim(),
                     editDate.getText().toString(), taskID,
                     editNote.getText().toString()
             );
@@ -252,7 +255,7 @@ public class SubtaskDetails extends AppCompatActivity {
             String dateFormat = "MM/dd/yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
-            subtaskDate = editDate.getText().toString();
+            subtaskDate = editDate.getText().toString().trim();
 
             if (subtaskDate.isEmpty()){
                 Toast.makeText(SubtaskDetails.this, "Date fields cannot be empty", Toast.LENGTH_SHORT).show();
@@ -274,13 +277,13 @@ public class SubtaskDetails extends AppCompatActivity {
                 triggerTime = date.getTime();
             }
             Intent intent = new Intent(SubtaskDetails.this, MyReceiver.class);
-            intent.putExtra("name", editName.getText().toString());
+            intent.putExtra("name", editName.getText().toString().trim());
             intent.putExtra("date", editDate.getText().toString());
 
             PendingIntent sender = PendingIntent.getBroadcast(SubtaskDetails.this, ++Main.numAlert, intent, PendingIntent.FLAG_IMMUTABLE);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, sender);
-            Toast.makeText(SubtaskDetails.this, editName.getText().toString() + " notification set for " + editDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(SubtaskDetails.this, editName.getText().toString().trim() + " notification set for " + editDate.getText().toString(), Toast.LENGTH_SHORT).show();
             return true;        }
         if (item.getItemId() == android.R.id.home) {
             finish();
