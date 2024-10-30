@@ -2,7 +2,6 @@ package com.example.d424_task_management_app.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Subtasks")
@@ -16,8 +15,8 @@ public class Subtask extends Task {
     private boolean isCompleted;
     private long timestampCompleted;
 
-    public Subtask(int subtaskID, String subtaskName, String subtaskDate, int taskID, String note) {
-        super(taskID, "", "", "", "");
+    public Subtask(int subtaskID, String subtaskName, String subtaskDate, int taskID, int userID, String note) {
+        super(taskID, "", "", "", "", userID);
         this.subtaskID = subtaskID;
         this.note = note;
         this.taskID = taskID;

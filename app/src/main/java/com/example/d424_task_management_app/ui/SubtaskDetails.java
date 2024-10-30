@@ -32,6 +32,7 @@ import java.util.Locale;
 
 public class SubtaskDetails extends AppCompatActivity {
     Repository repository;
+    UserSessionManagement userSessionManagement;
     String subtaskName;
     String subtaskDate;
     String subtaskNote;
@@ -40,15 +41,16 @@ public class SubtaskDetails extends AppCompatActivity {
     String taskName;
     String taskStart;
     String taskEnd;
+
     TextView editTaskName;
     EditText editName;
     TextView editDate;
     EditText editNote;
 
     boolean isSubtaskSaved = false;
-
     DatePickerDialog.OnDateSetListener dateListener;
     final Calendar myCalendar = Calendar.getInstance();
+    int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class SubtaskDetails extends AppCompatActivity {
             return insets;
         });
         repository = new Repository(getApplication());
+        userSessionManagement = new UserSessionManagement(this);
+        userID = userSessionManagement.getCurrentUserID();
         // Get input fields
         editTaskName = findViewById(R.id.text_taskName);
         editName = findViewById(R.id.edit_subtaskName);
@@ -213,14 +217,14 @@ public class SubtaskDetails extends AppCompatActivity {
                 }
                 subtask = new Subtask(subtaskID,
                         editName.getText().toString().trim(),
-                        editDate.getText().toString(), taskID,
+                        editDate.getText().toString(), taskID, userID,
                         editNote.getText().toString());
                 Toast.makeText(SubtaskDetails.this, "Adding Subtask", Toast.LENGTH_SHORT).show();
                 repository.insert(subtask);
             } else {
                 subtask = new Subtask(subtaskID,
                         editName.getText().toString().trim(),
-                        editDate.getText().toString(), taskID,
+                        editDate.getText().toString(), taskID, userID,
                         editNote.getText().toString()
                 );
                 Toast.makeText(SubtaskDetails.this, "Updating Subtask", Toast.LENGTH_SHORT).show();
@@ -236,7 +240,7 @@ public class SubtaskDetails extends AppCompatActivity {
             }
             subtask = new Subtask(subtaskID,
                     editName.getText().toString().trim(),
-                    editDate.getText().toString(), taskID,
+                    editDate.getText().toString(), taskID, userID,
                     editNote.getText().toString()
             );
             Toast.makeText(SubtaskDetails.this, "Deleting Subtask", Toast.LENGTH_SHORT).show();

@@ -6,4 +6,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="purple">#1C3CF3</color>
     <color name="blurple">#6577A8</color>
+    <color name="light_blurple">#F8FBFF</color>
 </resources>

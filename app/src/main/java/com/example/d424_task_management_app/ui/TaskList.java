@@ -37,6 +37,8 @@ public class TaskList extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private RecyclerView recyclerView;
     private String currentDateTimestamp;
+    private int userID;
+    private UserSessionManagement userSessionManagement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class TaskList extends AppCompatActivity {
             return insets;
         });
 
+        userSessionManagement = new UserSessionManagement(this);
+        userID = userSessionManagement.getCurrentUserID();
         currentDateTimestamp = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss a", Locale.getDefault()).format(new Date());
 
         SearchView searchView = findViewById(R.id.searchView);
@@ -88,9 +92,10 @@ public class TaskList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void updateTasks(){
-        List<Task> allTasks = repository.getmAllTasks();
-        taskAdapter.setTasks(allTasks);
+    private void updateTasks() {
+        userID = userSessionManagement.getCurrentUserID();
+        List<Task> userTasks = repository.getTasksByUser(userID);
+        taskAdapter.setTasks(userTasks);
     }
 
     @Override
@@ -103,7 +108,7 @@ public class TaskList extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.show_incomplete_tasks) {
-            List<Task> incompleteTasks = repository.getIncompleteTasks();
+            List<Task> incompleteTasks = repository.getIncompleteTasks(userID);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_report_list, null);
@@ -126,17 +131,7 @@ public class TaskList extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.add_sample_data) {
             repository = new Repository(getApplication());
-            Task task = new Task(0, "D424 Capstone", "School", "09/15/2024", "10/31/2024");
-            int taskID = (int) repository.insert(task);
-            Subtask subtask = new Subtask(0, "Task 3", "10/26/2024", taskID, "Complete and submit Task 3.");
-            repository.insert(subtask);
-            subtask = new Subtask(0, "Task 4", "10/28/2024", taskID, "Complete and submit Task 4.");
-            repository.insert(subtask);
-
-            task = new Task(0, "Leetcode", "Interview Prep", "05/23/2024", "12/31/2024");
-            taskID = (int) repository.insert(task);
-            subtask = new Subtask(0, "FizzBuzz", "08/12/2024", taskID, "Watch a tutorial on how to solve FizzBuzz.");
-            repository.insert(subtask);
+            repository.addSampleData(userID);
             Toast.makeText(TaskList.this, "Sample Data Added", Toast.LENGTH_SHORT).show();
             onResume();
         }
@@ -146,19 +141,13 @@ public class TaskList extends AppCompatActivity {
             Toast.makeText(TaskList.this, "All Data Deleted", Toast.LENGTH_SHORT).show();
             onResume();
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public StringBuilder generateIncompleteReport(List<Task> incompleteTasks) {
-        StringBuilder reportContent = new StringBuilder();
-        for (Task task : incompleteTasks) {
-            reportContent.append("Task Name: ").append(task.getTaskName())
-                    .append("Category: ").append(task.getCategoryName())
-                    .append("Start Date: ").append(task.getStartDate())
-                    .append("End Date: ").append(task.getEndDate())
-                    .append("\n");
+        if (item.getItemId() == R.id.logout) {
+            userSessionManagement.logout();
+            Intent intent = new Intent(TaskList.this, Main.class);
+            startActivity(intent);
+            finish();
         }
-        return reportContent;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

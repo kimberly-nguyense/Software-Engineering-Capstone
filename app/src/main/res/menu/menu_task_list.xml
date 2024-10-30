@@ -7,4 +7,6 @@
         android:id="@+id/add_sample_data"/>
     <item android:title="Delete All Data"
         android:id="@+id/delete_all_data"/>
+    <item android:title="Log Out"
+        android:id="@+id/logout"/>
 </menu>

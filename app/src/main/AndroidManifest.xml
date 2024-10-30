@@ -25,6 +25,10 @@
         </receiver>
 
         <activity
+            android:name=".ui.LoginActivity"
+            android:exported="false"
+            android:label="Login" />
+        <activity
             android:name=".ui.CalendarActivity"
             android:exported="false"
             android:label="Calendar View"

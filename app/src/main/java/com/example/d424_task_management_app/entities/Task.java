@@ -13,13 +13,22 @@ public class Task {
     private String endDate;
     private boolean isCompleted;
     private long timestampCompleted;
+    private int userID;
 
-    public Task(int taskID, String taskName, String categoryName, String startDate, String endDate) {
+    public Task(int taskID, String taskName, String categoryName, String startDate, String endDate, int userID) {
         this.categoryName = categoryName;
         this.taskName = taskName;
         this.taskID = taskID;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.userID = userID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getTaskName() {

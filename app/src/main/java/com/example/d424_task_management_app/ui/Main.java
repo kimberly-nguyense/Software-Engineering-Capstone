@@ -28,7 +28,7 @@ public class Main extends AppCompatActivity {
         });
         Button enterButton = findViewById(R.id.button_enter);
         enterButton.setOnClickListener(view -> {
-            Intent intent = new Intent(Main.this, TaskList.class);
+            Intent intent = new Intent(Main.this, LoginActivity.class);
             startActivity(intent);
         });
     }

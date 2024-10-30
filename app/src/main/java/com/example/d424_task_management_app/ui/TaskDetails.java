@@ -50,6 +50,8 @@ public class TaskDetails extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener endDateListener;
     private final Calendar myCalendar = Calendar.getInstance();
     private SubtaskAdapter subtaskAdapter;
+    private UserSessionManagement userSessionManagement;
+    private int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class TaskDetails extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        userSessionManagement = new UserSessionManagement(this);
+        userID = userSessionManagement.getCurrentUserID();
 
         // Get input fields
         edit_taskName = findViewById(R.id.edit_taskName);
@@ -239,7 +243,8 @@ public class TaskDetails extends AppCompatActivity {
                         edit_taskName.getText().toString().trim(),
                         edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
-                        edit_endDate.getText().toString());
+                        edit_endDate.getText().toString(),
+                        userID);
                 Toast.makeText(TaskDetails.this, "Adding Task", Toast.LENGTH_SHORT).show();
                 repository.insert(task);
             } else {
@@ -247,7 +252,8 @@ public class TaskDetails extends AppCompatActivity {
                         edit_taskName.getText().toString().trim(),
                         edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
-                        edit_endDate.getText().toString());
+                        edit_endDate.getText().toString(),
+                        userID);
                 Toast.makeText(TaskDetails.this, "Updating Task", Toast.LENGTH_SHORT).show();
                 repository.update(task);
             }
@@ -267,7 +273,8 @@ public class TaskDetails extends AppCompatActivity {
                         edit_taskName.getText().toString().trim(),
                         edit_categoryName.getText().toString().trim(),
                         edit_startDate.getText().toString(),
-                        edit_endDate.getText().toString());
+                        edit_endDate.getText().toString(),
+                        userID);
                 Toast.makeText(TaskDetails.this, "Deleting Task", Toast.LENGTH_SHORT).show();
                 repository.delete(task);
                 this.finish();

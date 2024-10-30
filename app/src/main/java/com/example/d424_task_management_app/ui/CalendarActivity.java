@@ -23,6 +23,8 @@ public class CalendarActivity extends AppCompatActivity {
     private TextView taskDetails;
     private Repository repository;
     private String selectedDate;
+    private UserSessionManagement userSessionManagement;
+    private int userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class CalendarActivity extends AppCompatActivity {
         selectedDate = todayDate;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_view);
+        userSessionManagement = new UserSessionManagement(this);
+        userID = userSessionManagement.getCurrentUserID();
 
         calendarView = findViewById(R.id.calendarView);
         taskDetails = findViewById(R.id.taskDetails);
@@ -37,24 +41,25 @@ public class CalendarActivity extends AppCompatActivity {
 
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             selectedDate = String.format("%02d/%02d/%04d", month + 1, dayOfMonth, year);
-            List<Task> tasks = repository.getTasksByDate(selectedDate);
+            List<Task> tasks = repository.getUserIncompletedTasksByDate(selectedDate, userID);
             displayTaskDetails(tasks);
         });
-        List<Task> tasks = repository.getTasksByDate(selectedDate);
-        displayTaskDetails(tasks);
+        int userID = userSessionManagement.getCurrentUserID();
+        List<Task> incompletedTasks = repository.getIncompleteTasks(userID);
+        displayTaskDetails(incompletedTasks);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        List<Task> tasks = repository.getTasksByDate(selectedDate);
+        List<Task> tasks = repository.getUserIncompletedTasksByDate(selectedDate, userID);
         displayTaskDetails(tasks);
     }
 
-    private void displayTaskDetails(List<Task> tasks) {
+    private void displayTaskDetails(List<Task> incompletedTasks) {
         StringBuilder details = new StringBuilder();
-        if (tasks != null && !tasks.isEmpty()) {
-            for (Task task : tasks) {
+        if (incompletedTasks != null && !incompletedTasks.isEmpty()) {
+            for (Task task : incompletedTasks) {
                 details.append("Task: ").append(task.getTaskName()).append("\n");
                 details.append("Category: ").append(task.getCategoryName()).append("\n");
                 details.append("Start Date: ").append(task.getStartDate()).append("\n");
