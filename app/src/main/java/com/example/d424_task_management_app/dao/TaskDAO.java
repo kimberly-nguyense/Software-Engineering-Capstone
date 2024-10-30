@@ -28,24 +28,12 @@ public interface TaskDAO {
     @Query("SELECT * FROM Tasks WHERE taskID = :taskID")
     Task getTask(int taskID);
 
-    @Query("SELECT * FROM Tasks WHERE isCompleted = 0 AND userID = :userID ORDER BY taskID ASC")
-    List<Task> getIncompleteTasks(int userID);
-
-    @Query("DELETE FROM Tasks")
-    void deleteAll();
-
-    @Query("DELETE FROM sqlite_sequence WHERE name = 'Tasks'")
-    void resetTaskIdGenerator();
-
-    @Query("SELECT * FROM Tasks WHERE startDate <= :selectedDate AND endDate >= :selectedDate")
-    List<Task> getTasksByDate(String selectedDate);
-
     @Query("SELECT * FROM Tasks WHERE userID = :userID")
     List<Task> getTasksByUser(int userID);
 
+    @Query("SELECT * FROM Tasks WHERE isCompleted = 0 AND userID = :userID ORDER BY taskID ASC")
+    List<Task> getIncompleteTasks(int userID);
+
     @Query("SELECT * FROM Tasks WHERE startDate <= :selectedDate AND endDate >= :selectedDate AND isCompleted = 0 AND userID = :userID")
     List<Task> getUserIncompletedTasksByDate(String selectedDate, int userID);
-
-    @Query("DELETE FROM Tasks WHERE userID = :userID")
-    void deleteAllUserTasks(int userID);
 }

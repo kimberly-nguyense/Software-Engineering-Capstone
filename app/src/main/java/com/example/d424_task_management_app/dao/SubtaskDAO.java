@@ -30,13 +30,4 @@ public interface SubtaskDAO {
 
     @Query("SELECT * FROM Subtasks WHERE isCompleted = 0 AND taskID = :taskID")
     List<Subtask> incompleteSubtasks(int taskID);
-
-    @Query("DELETE FROM Subtasks")
-    void deleteAll();
-
-    @Query("DELETE FROM sqlite_sequence WHERE name = 'Subtasks'")
-    void resetSubtaskIdGenerator();
-
-    @Query("DELETE FROM Subtasks WHERE userID = :userID")
-    void deleteAllUserSubtasks(int userID);
 }

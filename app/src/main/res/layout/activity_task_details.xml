@@ -80,14 +80,13 @@
                     android:textColor="#FDFCF8"
                     android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/edit_categoryName"
+                <Spinner
+                    android:id="@+id/spinner_categories"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
                     android:background="#FBF8EF"
-                    android:hint="School"
                     android:minWidth="300dp"
                     android:minHeight="48dp"
                     android:padding="5dp"

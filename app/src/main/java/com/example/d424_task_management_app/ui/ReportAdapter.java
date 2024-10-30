@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportViewHolder> {
     private List<Task> tasks;
-    private LayoutInflater mInflater;
-    private String currentDateTimestamp;
+    private final LayoutInflater mInflater;
+    private final String currentDateTimestamp;
 
     public ReportAdapter(List<Task> tasks, LayoutInflater mInflater, String currentDateTimestamp) {
         this.tasks = tasks;

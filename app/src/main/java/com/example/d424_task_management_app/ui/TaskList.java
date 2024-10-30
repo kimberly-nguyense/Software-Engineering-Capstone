@@ -123,7 +123,6 @@ public class TaskList extends AppCompatActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(reportAdapter);
 
-            // Show the dialog
             builder.setTitle("Report")
                     .setPositiveButton("OK", null)
                     .show();
@@ -133,11 +132,6 @@ public class TaskList extends AppCompatActivity {
             repository.addSampleData(userID);
             Toast.makeText(TaskList.this, "Sample Data Added", Toast.LENGTH_SHORT).show();
             updateTasks();
-            onResume();
-        }
-        if (item.getItemId() == R.id.delete_all_user_tasks) {
-            repository.deleteAllUserTasks(userID);
-            Toast.makeText(TaskList.this, "All Data Deleted", Toast.LENGTH_SHORT).show();
             onResume();
         }
         if (item.getItemId() == R.id.logout) {

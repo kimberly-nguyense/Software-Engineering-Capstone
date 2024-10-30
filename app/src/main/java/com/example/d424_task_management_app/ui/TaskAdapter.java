@@ -57,12 +57,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     }else{
                         task.setTimestampCompleted(0);
                     }
-                    repository.update(task);
+                    repository.updateTask(task);
                     Toast.makeText(context, "Task has been completed.", Toast.LENGTH_SHORT).show();
                 }else{
                     isCompleted.setChecked(false);
                     task.setCompleted(false);
-                    repository.update(task);
+                    repository.updateTask(task);
                     Toast.makeText(context, "Task cannot be completed until all subtasks are completed.", Toast.LENGTH_SHORT).show();
                 }
             });

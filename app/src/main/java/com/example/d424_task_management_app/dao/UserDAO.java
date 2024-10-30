@@ -22,10 +22,4 @@ public interface UserDAO {
 
     @Delete
     void delete(User user);
-
-    @Query("DELETE FROM Users")
-    void deleteAll();
-
-    @Query("SELECT userID FROM Users WHERE username = :username LIMIT 1")
-    int getUserID(String username);
 }

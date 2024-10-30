@@ -5,8 +5,6 @@
         android:id="@+id/show_incomplete_tasks"/>
     <item android:title="Add Sample Data"
         android:id="@+id/add_sample_data"/>
-    <item android:title="Delete All Your Tasks"
-        android:id="@+id/delete_all_user_tasks"/>
     <item android:title="Log Out"
         android:id="@+id/logout"/>
 </menu>

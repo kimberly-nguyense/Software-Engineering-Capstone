@@ -86,10 +86,9 @@ public class LoginActivity extends AppCompatActivity {
             String hashedPassword = hashPassword(password, salt);
             User user = new User(username, hashedPassword, salt);
             runOnUiThread(() -> {
-                int userID = repository.insert(user);
+                int userID = repository.insertUser(user);
                 Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_SHORT).show();
                 userSessionManagement.createSession(userID);
-
                 startActivity(new Intent(getApplicationContext(), TaskList.class));
             });
         }).start();

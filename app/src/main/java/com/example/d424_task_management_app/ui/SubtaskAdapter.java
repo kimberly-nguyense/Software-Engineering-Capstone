@@ -52,7 +52,7 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskV
                 }else{
                     subtask.setTimestampCompleted(0);
                 }
-                repository.update(subtask);
+                repository.updateSubtask(subtask);
             });
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();

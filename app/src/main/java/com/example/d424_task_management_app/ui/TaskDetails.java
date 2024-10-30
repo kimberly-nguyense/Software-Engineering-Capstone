@@ -9,7 +9,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +27,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424_task_management_app.R;
 import com.example.d424_task_management_app.database.Repository;
+import com.example.d424_task_management_app.entities.Category;
 import com.example.d424_task_management_app.entities.Subtask;
 import com.example.d424_task_management_app.entities.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +47,6 @@ public class TaskDetails extends AppCompatActivity {
     private String taskEnd;
     private int taskID;
     private EditText edit_taskName;
-    private EditText edit_categoryName;
     private TextView edit_startDate;
     private TextView edit_endDate;
     private Repository repository;
@@ -52,6 +57,9 @@ public class TaskDetails extends AppCompatActivity {
     private SubtaskAdapter subtaskAdapter;
     private UserSessionManagement userSessionManagement;
     private int userID;
+    private Spinner categorySpinner;
+    private ArrayAdapter<Category> categoryAdapter;
+    private List<Category> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +74,19 @@ public class TaskDetails extends AppCompatActivity {
         userSessionManagement = new UserSessionManagement(this);
         userID = userSessionManagement.getCurrentUserID();
 
+        // Set up Recycler View to show subtasks associated with task
+        RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
+        repository = new Repository(getApplication());
+        subtaskAdapter = new SubtaskAdapter(this, repository);
+        recyclerView.setAdapter(subtaskAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
+        subtaskAdapter.setSubtasks(filteredSubtasks);
+        categorySpinner = findViewById(R.id.spinner_categories);
+        loadCategorySpinner();
+
         // Get input fields
         edit_taskName = findViewById(R.id.edit_taskName);
-        edit_categoryName = findViewById(R.id.edit_categoryName);
         edit_startDate = findViewById(R.id.edit_startDate);
         edit_endDate = findViewById(R.id.edit_endDate);
         // Get clicked task details
@@ -80,11 +98,8 @@ public class TaskDetails extends AppCompatActivity {
         // Check if task has been saved
         isTaskSaved = getIntent().getBooleanExtra("isTaskSaved", false);
         edit_taskName.addTextChangedListener(textWatcher);
-        edit_categoryName.addTextChangedListener(textWatcher);
         edit_startDate.addTextChangedListener(textWatcher);
         edit_endDate.addTextChangedListener(textWatcher);
-        // Set input fields
-        setTaskDetailsWithoutTriggeringTextWatcher();
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton_addSubtask);
         fab.setOnClickListener(view -> {
@@ -99,15 +114,6 @@ public class TaskDetails extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Set up Recycler View to show subtasks associated with task
-        RecyclerView recyclerView = findViewById(R.id.subtaskRecyclerView);
-        repository = new Repository(getApplication());
-        subtaskAdapter = new SubtaskAdapter(this, repository);
-        recyclerView.setAdapter(subtaskAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Subtask> filteredSubtasks = repository.getAssociatedSubtasks(taskID);
-        subtaskAdapter.setSubtasks(filteredSubtasks);
 
         edit_startDate.setOnClickListener(view -> new DatePickerDialog(TaskDetails.this,
                 startDateListener,
@@ -150,23 +156,63 @@ public class TaskDetails extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         edit_endDate.setText(sdf.format(myCalendar.getTime()));
     }
+    private void loadCategorySpinner() {
+        new Thread(() -> {
+            List<Category> categories = repository.getAllCategories();
+            runOnUiThread(() -> {
+                categoryList = new ArrayList<>();
+                categoryList.add(new Category(0, "Select a Category"));
+                categoryList.addAll(categories);
+
+                categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryList);
+                categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                categorySpinner.setAdapter(categoryAdapter);
+
+                categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Category selectedCategory = (Category) categorySpinner.getSelectedItem();
+                        categoryName = selectedCategory.getCategoryName();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        categoryName = null;
+                    }
+                });
+
+                // Set input fields
+                setTaskDetailsWithoutTriggeringTextWatcher();
+            });
+        }).start();
+    }
 
     private void setTaskDetailsWithoutTriggeringTextWatcher() {
         edit_taskName.removeTextChangedListener(textWatcher);
-        edit_categoryName.removeTextChangedListener(textWatcher);
         edit_startDate.removeTextChangedListener(textWatcher);
         edit_endDate.removeTextChangedListener(textWatcher);
 
         edit_taskName.setText(taskName);
-        edit_categoryName.setText(categoryName);
         edit_startDate.setText(taskStart);
         edit_endDate.setText(taskEnd);
 
+        if (taskID == -1) {
+            categorySpinner.setSelection(0);
+        } else {
+            for (int i = 0; i < categoryList.size(); i++) {
+                if (categoryList.get(i).getCategoryName().equals(categoryName)) {
+                    categorySpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
+
         edit_taskName.addTextChangedListener(textWatcher);
-        edit_categoryName.addTextChangedListener(textWatcher);
         edit_startDate.addTextChangedListener(textWatcher);
         edit_endDate.addTextChangedListener(textWatcher);
     }
+
+
 
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -217,13 +263,11 @@ public class TaskDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Task task;
         if (item.getItemId() == R.id.save_task) {
+            categoryName = ((Category) categorySpinner.getSelectedItem()).getCategoryName();
             if (checkValidDate() == -1) {
                 return true;
             }else if (edit_taskName.getText().toString().isEmpty()) {
                 Toast.makeText(TaskDetails.this, "Task name cannot be empty", Toast.LENGTH_SHORT).show();
-                return true;
-            }else if (edit_categoryName.getText().toString().isEmpty()) {
-                Toast.makeText(TaskDetails.this, "Category name cannot be empty", Toast.LENGTH_SHORT).show();
                 return true;
             }else if (edit_startDate.getText().toString().isEmpty()) {
                 Toast.makeText(TaskDetails.this, "Start date cannot be empty", Toast.LENGTH_SHORT).show();
@@ -238,29 +282,29 @@ public class TaskDetails extends AppCompatActivity {
                     taskID = 1;
                 } else {
                     taskID = repository.getmAllTasks().get(repository.getmAllTasks().size() - 1).getTaskID() + 1;
-                }
-                task = new Task(taskID,
+                }task = new Task(taskID,
                         edit_taskName.getText().toString().trim(),
-                        edit_categoryName.getText().toString().trim(),
+                        categoryName,
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString(),
                         userID);
                 Toast.makeText(TaskDetails.this, "Adding Task", Toast.LENGTH_SHORT).show();
-                repository.insert(task);
+                repository.insertTask(task);
             } else {
                 task = new Task(taskID,
                         edit_taskName.getText().toString().trim(),
-                        edit_categoryName.getText().toString().trim(),
+                        categoryName,
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString(),
                         userID);
                 Toast.makeText(TaskDetails.this, "Updating Task", Toast.LENGTH_SHORT).show();
-                repository.update(task);
+                repository.updateTask(task);
             }
             isTaskSaved = true;
             return true;
         }
         if (item.getItemId() == R.id.delete_task) {
+            categoryName = ((Category) categorySpinner.getSelectedItem()).getCategoryName();
             if (!isTaskSaved) {
                 Toast.makeText(TaskDetails.this, "Cannot delete task that has not been saved", Toast.LENGTH_SHORT).show();
                 return true;
@@ -271,12 +315,12 @@ public class TaskDetails extends AppCompatActivity {
             } else {
                 task = new Task(taskID,
                         edit_taskName.getText().toString().trim(),
-                        edit_categoryName.getText().toString().trim(),
+                        categoryName,
                         edit_startDate.getText().toString(),
                         edit_endDate.getText().toString(),
                         userID);
                 Toast.makeText(TaskDetails.this, "Deleting Task", Toast.LENGTH_SHORT).show();
-                repository.delete(task);
+                repository.deleteTask(task);
                 this.finish();
             }
             return true;
@@ -330,7 +374,7 @@ public class TaskDetails extends AppCompatActivity {
             } else {
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-                long triggerTime = System.currentTimeMillis() + 60000; // 1 minute from now
+                long triggerTime = System.currentTimeMillis() + 60000;
 
                 Intent intent = new Intent(TaskDetails.this, MyReceiver.class);
                 PendingIntent sender = PendingIntent.getBroadcast(TaskDetails.this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -373,7 +417,6 @@ public class TaskDetails extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        // After updating Task details, refresh TaskDetails
         super.onResume();
         updateTasks();
     }

@@ -220,7 +220,7 @@ public class SubtaskDetails extends AppCompatActivity {
                         editDate.getText().toString(), taskID, userID,
                         editNote.getText().toString());
                 Toast.makeText(SubtaskDetails.this, "Adding Subtask", Toast.LENGTH_SHORT).show();
-                repository.insert(subtask);
+                repository.insertSubtask(subtask);
             } else {
                 subtask = new Subtask(subtaskID,
                         editName.getText().toString().trim(),
@@ -228,7 +228,7 @@ public class SubtaskDetails extends AppCompatActivity {
                         editNote.getText().toString()
                 );
                 Toast.makeText(SubtaskDetails.this, "Updating Subtask", Toast.LENGTH_SHORT).show();
-                repository.update(subtask);
+                repository.updateSubtask(subtask);
             }
             isSubtaskSaved = true;
             return true;
@@ -244,7 +244,7 @@ public class SubtaskDetails extends AppCompatActivity {
                     editNote.getText().toString()
             );
             Toast.makeText(SubtaskDetails.this, "Deleting Subtask", Toast.LENGTH_SHORT).show();
-            repository.delete(subtask);
+            repository.deleteSubtask(subtask);
             this.finish();
             return true;
         }
