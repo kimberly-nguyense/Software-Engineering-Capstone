@@ -130,14 +130,13 @@ public class TaskList extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.add_sample_data) {
-            repository = new Repository(getApplication());
             repository.addSampleData(userID);
             Toast.makeText(TaskList.this, "Sample Data Added", Toast.LENGTH_SHORT).show();
+            updateTasks();
             onResume();
         }
-        if (item.getItemId() == R.id.delete_all_data) {
-            repository = new Repository(getApplication());
-            repository.deleteAll();
+        if (item.getItemId() == R.id.delete_all_user_tasks) {
+            repository.deleteAllUserTasks(userID);
             Toast.makeText(TaskList.this, "All Data Deleted", Toast.LENGTH_SHORT).show();
             onResume();
         }

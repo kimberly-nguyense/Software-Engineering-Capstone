@@ -123,6 +123,16 @@ public class Repository {
         }
     }
 
+    public List<Subtask> getIncompleteSubtasks(int taskID) {
+        databaseWriteExecutor.execute(() -> mAllSubtasks = mSubtaskDAO.incompleteSubtasks(taskID));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return mAllSubtasks;
+    }
+
     public void deleteAll() {
         databaseWriteExecutor.execute(() -> {
             taskListDAO.deleteAll();
@@ -130,6 +140,18 @@ public class Repository {
 
             taskListDAO.resetTaskIdGenerator();
             mSubtaskDAO.resetSubtaskIdGenerator();
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllUserTasks(int userID) {
+        databaseWriteExecutor.execute(() -> {
+            taskListDAO.deleteAllUserTasks(userID);
+            mSubtaskDAO.deleteAllUserSubtasks(userID);
         });
         try {
             Thread.sleep(1000);

@@ -45,4 +45,7 @@ public interface TaskDAO {
 
     @Query("SELECT * FROM Tasks WHERE startDate <= :selectedDate AND endDate >= :selectedDate AND isCompleted = 0 AND userID = :userID")
     List<Task> getUserIncompletedTasksByDate(String selectedDate, int userID);
+
+    @Query("DELETE FROM Tasks WHERE userID = :userID")
+    void deleteAllUserTasks(int userID);
 }

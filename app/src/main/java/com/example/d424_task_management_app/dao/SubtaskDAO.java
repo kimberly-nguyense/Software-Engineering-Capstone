@@ -28,12 +28,15 @@ public interface SubtaskDAO {
     @Query("SELECT * FROM Subtasks WHERE taskID = :prod ORDER BY subtaskID ASC")
     List<Subtask> getAssociatedSubtasks(int prod);
 
-    @Query("SELECT * FROM Subtasks WHERE subtaskName LIKE :subtaskName ORDER BY subtaskDate ASC")
-    List<Subtask> searchSubtasks(String subtaskName);
+    @Query("SELECT * FROM Subtasks WHERE isCompleted = 0 AND taskID = :taskID")
+    List<Subtask> incompleteSubtasks(int taskID);
 
     @Query("DELETE FROM Subtasks")
     void deleteAll();
 
     @Query("DELETE FROM sqlite_sequence WHERE name = 'Subtasks'")
     void resetSubtaskIdGenerator();
+
+    @Query("DELETE FROM Subtasks WHERE userID = :userID")
+    void deleteAllUserSubtasks(int userID);
 }

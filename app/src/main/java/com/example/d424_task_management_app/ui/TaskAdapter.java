@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.d424_task_management_app.R;
 import com.example.d424_task_management_app.database.Repository;
+import com.example.d424_task_management_app.entities.Subtask;
 import com.example.d424_task_management_app.entities.Task;
 
 import java.util.ArrayList;
@@ -46,13 +48,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             isCompleted.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 final Task task = taskList.get(position);
-                task.setCompleted(!task.isCompleted());
-                if (task.isCompleted()) {
-                    task.setTimestampCompleted(System.currentTimeMillis());
+                List<Subtask> incompleteSubtasks = repository.getIncompleteSubtasks(task.getTaskID());
+
+                if (incompleteSubtasks.isEmpty()) {
+                    task.setCompleted(!task.isCompleted());
+                    if (task.isCompleted()) {
+                        task.setTimestampCompleted(System.currentTimeMillis());
+                    }else{
+                        task.setTimestampCompleted(0);
+                    }
+                    repository.update(task);
+                    Toast.makeText(context, "Task has been completed.", Toast.LENGTH_SHORT).show();
                 }else{
-                    task.setTimestampCompleted(0);
+                    isCompleted.setChecked(false);
+                    task.setCompleted(false);
+                    repository.update(task);
+                    Toast.makeText(context, "Task cannot be completed until all subtasks are completed.", Toast.LENGTH_SHORT).show();
                 }
-                repository.update(task);
             });
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
