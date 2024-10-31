@@ -1,0 +1,148 @@
+@startuml
+
+class Task {
+  - taskID : int
+  - taskName : String
+  - categoryName : String
+  - startDate : String
+  - endDate : String
+  - isCompleted : boolean
+  - timestampCompleted : long
+  - userID : int
+  + getTaskName()
+  + setTaskName()
+  + isCompleted()
+  + setCompleted()
+}
+
+class Subtask {
+  - subtaskID : int
+  - subtaskName : String
+  - subtaskDate : String
+  - taskID : int
+  - note : String
+  - isCompleted : boolean
+  + getSubtaskName()
+  + setSubtaskName()
+}
+
+class User {
+  - userID : int
+  - username : String
+  - hashedPassword : String
+  + getUsername()
+  + setUsername()
+}
+
+class Category {
+  - categoryID : int
+  - categoryName : String
+  + getCategoryName()
+  + setCategoryName()
+}
+
+class TaskDAO {}
+class SubtaskDAO {}
+class UserDAO {}
+class CategoryDAO {}
+
+class MainActivity {
+  # onCreate()
+}
+
+class LoginActivity {
+  - input_username : EditText
+  - input_password : EditText
+  + loginUser()
+  + registerUser()
+}
+
+class CalendarActivity {
+  - calendarView : CalendarView
+  - repository : Repository
+  + displayTaskDetails()
+}
+
+class TaskAdapter {
+  - taskList : List<Task>
+  + filter()
+  + setTasks()
+}
+
+class SubtaskAdapter {
+  - subtaskList : List<Subtask>
+  + setSubtasks()
+}
+
+class ReportAdapter {
+  - tasks : List<Task>
+  + setTasks()
+}
+
+class Repository {
+  - TaskDAO : TaskDAO
+  - SubtaskDAO : SubtaskDAO
+  - UserDAO : UserDAO
+  - CategoryDAO : CategoryDAO
+  + getAllTasks()
+  + insertTask()
+  + updateTask()
+  + deleteTask()
+  + getUser()
+  + addSampleData()
+}
+
+class TaskDatabaseBuilder {
+  + getDatabase()
+}
+
+class TaskList {
+  - repository : Repository
+  - taskAdapter : TaskAdapter
+  - userSessionManagement : UserSessionManagement
+  # onCreate()
+  + onQueryTextChange()
+  + updateTasks()
+}
+
+class UserSessionManagement {
+  - sharedPreferences : SharedPreferences
+  - editor : SharedPreferences.Editor
+  + createSession(int userID)
+  + getCurrentUserID()
+  + logout()
+}
+
+class TaskDetails {
+  - repository : Repository
+  # onCreate()
+  + saveTask()
+}
+
+class SubtaskDetails {
+  - repository : Repository
+  # onCreate()
+  + saveSubtask()
+}
+
+Subtask <|-- Task
+TaskDAO --> Task
+SubtaskDAO --> Subtask
+UserDAO --> User
+CategoryDAO --> Category
+TaskAdapter --> Task
+SubtaskAdapter --> Subtask
+ReportAdapter --> Task
+Repository --> TaskDatabaseBuilder
+Repository --> User
+Repository --> Category
+TaskList --> Repository
+TaskList --> TaskAdapter
+TaskList --> UserSessionManagement
+TaskDetails --> Repository
+SubtaskDetails --> Repository
+UserSessionManagement <.. TaskList
+CalendarActivity --> Repository
+LoginActivity --> UserSessionManagement
+
+@enduml
