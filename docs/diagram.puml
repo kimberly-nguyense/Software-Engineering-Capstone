@@ -1,104 +1,95 @@
 @startuml
 
-class Task {
-  - taskID : int
-  - taskName : String
-  - categoryName : String
-  - startDate : String
-  - endDate : String
-  - isCompleted : boolean
-  - timestampCompleted : long
-  - userID : int
+package "Entities" {
+    class Task {
+      - taskID : int
+      - taskName : String
+      - startDate : String
+      - endDate : String
+      - userID : int
+      - categoryID : int
+      + setTaskName()
+      + getTaskName()
+    }
+
+    class Subtask {
+      - subtaskID : int
+      - subtaskName : String
+      - taskID : int
+      + setSubtaskName()
+      + getSubtaskName()
+    }
+
+    class User {
+      - userID : int
+      - username : String
+      + login()
+      + logout()
+    }
+
+    class Category {
+      - categoryID : int
+      - categoryName : String
+      + setCategoryName()
+      + getCategoryName()
+    }
 }
 
-class Subtask {
-  - subtaskID : int
-  - subtaskName : String
-  - subtaskDate : String
-  - taskID : int
-  - note : String
-  - isCompleted : boolean
+package "Data Access" {
+    class TaskDAO {}
+    class SubtaskDAO {}
+    class UserDAO {}
+    class CategoryDAO {}
+
+    class Repository {
+      + addTask()
+      + updateTask()
+      + deleteTask()
+      + getUser()
+      + addSampleData()
+    }
 }
 
-class User {
-  - userID : int
-  - username : String
-  - hashedPassword : String
-}
+package "User Interface" {
+    class TaskList {
+      + displayTasks()
+    }
 
-class Category {
-  - categoryID : int
-  - categoryName : String
-}
+    class TaskDetails {
+      + saveTask()
+    }
 
-class Repository {
-  - TaskDAO : TaskDAO
-  - SubtaskDAO : SubtaskDAO
-  - UserDAO : UserDAO
-  - CategoryDAO : CategoryDAO
-  + getAllTasks()
-  + insertTask()
-  + updateTask()
-  + deleteTask()
-  + getUser()
-  + addSampleData()
-}
+    class SubtaskDetails {
+      + saveSubtask()
+    }
 
-class TaskDatabaseBuilder {
-  + getDatabase()
-}
+    class CalendarActivity {
+      + displayTaskCalendar()
+    }
 
-class TaskList {
-  - repository : Repository
-  - taskAdapter : TaskAdapter
-  - userSessionManagement : UserSessionManagement
-}
-
-class TaskDetails {
-  - repository : Repository
-}
-
-class SubtaskDetails {
-  - repository : Repository
-}
-
-class LoginActivity {
-  - input_username : EditText
-  - input_password : EditText
-}
-
-class CalendarActivity {
-  - calendarView : CalendarView
-  - repository : Repository
-}
-
-class TaskAdapter {
-  - taskList : List<Task>
-}
-
-class SubtaskAdapter {
-  - subtaskList : List<Subtask>
-}
-
-class ReportAdapter {
-  - tasks : List<Task>
-}
-
-class UserSessionManagement {
-  - sharedPreferences : SharedPreferences
-  - editor : SharedPreferences.Editor
+    class UserSessionManagement {
+      - sharedPreferences : SharedPreferences
+      + createSession(int userID)
+      + getCurrentUserID()
+      + logout()
+    }
 }
 
 Task <|-- Subtask
-Repository --> TaskDatabaseBuilder
-Repository --> User
-Repository --> Category
+TaskDAO --> Task
+SubtaskDAO --> Subtask
+UserDAO --> User
+CategoryDAO --> Category
+Repository --> TaskDAO
+Repository --> SubtaskDAO
+Repository --> UserDAO
+Repository --> CategoryDAO
 TaskList --> Repository
-TaskList --> TaskAdapter
-TaskList --> UserSessionManagement
 TaskDetails --> Repository
 SubtaskDetails --> Repository
 CalendarActivity --> Repository
-LoginActivity --> UserSessionManagement
+UserSessionManagement --> User
+Task --> User : "userID"
+Task --> Category : "categoryID"
 
 @enduml
