@@ -38,6 +38,13 @@ public class Repository {
         categoryDAO = db.CategoryDAO();
     }
 
+    public Repository(TaskDAO taskListDAO, SubtaskDAO mSubtaskDAO, UserDAO userDAO, CategoryDAO categoryDAO) {
+        this.taskListDAO = taskListDAO;
+        this.mSubtaskDAO = mSubtaskDAO;
+        this.userDAO = userDAO;
+        this.categoryDAO = categoryDAO;
+    }
+
     public List<Task> getmAllTasks() {
         databaseWriteExecutor.execute(() -> mAllTasks = taskListDAO.getAllTasks());
         try {
@@ -60,6 +67,21 @@ public class Repository {
             throw new RuntimeException(e);
         }
         return mUserTasks;
+    }
+
+    public boolean createTask(Task task) {
+        if (task.getTaskName().isEmpty()) {
+            return false;
+        }
+        databaseWriteExecutor.execute(() -> {
+            taskListDAO.insert(task);
+        });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public long insertTask(Task task) {

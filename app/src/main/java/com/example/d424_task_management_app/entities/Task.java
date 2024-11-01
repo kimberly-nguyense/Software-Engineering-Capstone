@@ -24,6 +24,10 @@ public class Task {
         this.userID = userID;
     }
 
+    public Task() {
+
+    }
+
     public int getUserID() {
         return userID;
     }
